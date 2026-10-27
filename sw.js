@@ -1,4 +1,4 @@
-const CACHE = 'koprulu-offline-v2';
+const CACHE = 'koprulu-offline-v4';
 const ASSETS = ['./','./index.html','./styles.css','./app.js','./engine.mjs','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

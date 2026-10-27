@@ -10,6 +10,8 @@
 - 20 bots, distribuídos entre as três raças, com líderes próprios e diferentes estilos de desenvolvimento.
 - 8 edifícios, 6 tecnologias, 6 tipos de frotas com designações por raça, 2 defesas, energia e 3 recursos.
 - Filas de produção, reconhecimento por sondas, ataque, combate automático simplificado, saque e relatórios.
+- Pré-visualização de missões com combustível, duração de ida e volta e capacidade de carga; validação da seleção antes do lançamento.
+- Guia de expansão com quatro objetivos: energia, produção, armamento e desbloqueio de unidades pesadas. O progresso acompanha os níveis concluídos e é preservado no save.
 - Interface responsiva para iPhone, instalação PWA, cache de ficheiros estáticos, simulação de tempo decorrido com a aplicação fechada.
 - Gravação em IndexedDB (fallback localStorage), exportação/importação de saves JSON e migração de saves da versão 1.
 - Botão **Opções → Simular +1 hora** para experimentar sem esperar.
@@ -30,6 +32,18 @@ O GitHub Pages **aloja apenas os ficheiros estáticos**. A simulação e o save 
 
 **Atenção:** na PWA instalada, os dados locais podem ser apagados se removeres a app ou limpares o armazenamento. Faz cópias em **Opções → Exportar progresso**, preferencialmente para iCloud Drive.
 
+## Experimentar e preparar uma entrega
+
+Para gerar uma edição HTML autónoma para computador e um ZIP com a PWA, usa Python 3, sem instalar pacotes:
+
+```bash
+python3 scripts/package.py
+```
+
+Os ficheiros são criados em `dist/` (ignorado pelo Git). Abre `dist/koprulu-offline.html` num navegador de computador com JavaScript ativo. Contém o motor, a interface, os estilos e o ícone no próprio ficheiro. Não precisa de descarregar recursos externos. Alguns navegadores geridos bloqueiam ficheiros locais; nesse caso, serve a pasta por HTTP.
+
+O ZIP inclui `JOGAR.html`, instruções em `COMECAR.txt` e os ficheiros originais da PWA. Para iPhone, publica a PWA por HTTPS conforme as instruções acima. O progresso fica no navegador e na origem usados; exporta/importa o save para o transferir entre as duas edições.
+
 ## Usar com Codex
 
 Cria/importa o repositório no GitHub e seleciona-o num ambiente Codex. Instrução inicial sugerida:
@@ -43,6 +57,8 @@ Node.js 20 ou superior, sem `npm install`:
 ```bash
 node --test test.mjs
 ```
+
+Os testes cobrem o motor, os objetivos de expansão, a consistência entre a pré-visualização e o lançamento de frotas e a presença dos ficheiros e ícones necessários ao cache offline.
 
 Para testes num navegador de computador usa um **servidor estático** (ficheiros ES modules requerem servidor web, não abras `index.html` via `file://`):
 

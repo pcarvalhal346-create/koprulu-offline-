@@ -123,6 +123,16 @@ export function prices(cat,key,level=0,qty=1) {const d=cat==='building'?BUILDING
 export function affordable(res,cost) {return Object.keys(RESOURCE_NAMES).every(k=>safe(res[k]) + 1e-7 >= (cost[k]||0));}
 const pay = (res,cost) => { for(const k of Object.keys(RESOURCE_NAMES)) res[k]=Math.max(0,res[k]-(cost[k]||0)); };
 export function storageCapacity(level=0){return Math.floor(30000*Math.pow(1.65,level));}
+export function expansionProgress(s){
+  const p=s.player;
+  const goals=[
+    {id:'solar',title:'Garantir energia',description:'Central Solar no nível 6 para sustentar a expansão.',section:'buildings',complete:(p.buildings.solar||0)>=6},
+    {id:'metal',title:'Expandir a economia',description:'Mina de Metal no nível 4 para aumentar a produção.',section:'buildings',complete:(p.buildings.metal||0)>=4},
+    {id:'weapons',title:'Reforçar o ataque',description:'Tecnologia de Armas no nível 1: +10% de ataque.',section:'research',complete:(p.tech.weapons||0)>=1},
+    {id:'shipyard',title:'Desbloquear frota pesada',description:`${raceBuildingName(p.race,'shipyard')} no nível 2 para produzir unidades pesadas.`,section:'buildings',complete:(p.buildings.shipyard||0)>=2}
+  ];
+  return {goals,completed:goals.filter(g=>g.complete).length,total:goals.length,next:goals.find(g=>!g.complete)||null};
+}
 export function production(buildings,race=null,leaderId=null) {
   const m=buildings.metal||0,c=buildings.crystal||0,d=buildings.deuterium||0,sl=buildings.solar||0;
   const supplied=20*sl*Math.pow(1.1,sl)+15;
@@ -179,20 +189,27 @@ const addShips=(dest,ships)=>{for(const [k,v] of Object.entries(ships))dest[k]=(
 const applyLoot=(resources,capacity)=>{const total=Object.values(resources).reduce((a,b)=>a+b,0);const steal=Math.min(total*0.5,capacity);if(steal<=0)return blank();const out=blank();let remaining=steal;for(const k of Object.keys(RESOURCE_NAMES)){out[k]=Math.min(resources[k],steal*(resources[k]/Math.max(total,1)),remaining);resources[k]-=out[k];remaining-=out[k];}return out;};
 export function coords(x){return `[${x.galaxy}:${x.system}:${x.position}]`}
 function fleetTravelMs(bot){return Math.round((55+(bot.system||1)*2)*1000)};
-export function sendFleet(s,botId,ships,mission='attack') {
+export function previewFleet(s,botId,ships,mission='attack') {
   const target=s.bots.find(b=>b.id===Number(botId)); if(!target)return {ok:false,message:'Destino inválido.'};
   if(!['attack','spy'].includes(mission))return {ok:false,message:'Missão inválida.'};
-  if(s.fleets.filter(f=>f.owner==='player').length>=Math.min(8,2+(s.player.tech.computer||0)))return {ok:false,message:'Sem posições de frota disponíveis.'};
+  const slotsUsed=s.fleets.filter(f=>f.owner==='player').length,slotsMax=Math.min(8,2+(s.player.tech.computer||0));
+  if(slotsUsed>=slotsMax)return {ok:false,message:'Sem posições de frota disponíveis.'};
   const clean={};let count=0;for(const k of Object.keys(UNITS)){
-    let n=Number(ships[k]||0);if(!Number.isInteger(n)||n<0||n>100000)return {ok:false,message:'Quantidade inválida.'};
+    const n=Number(ships[k]??0);if(!Number.isInteger(n)||n<0||n>100000)return {ok:false,message:'Quantidade inválida.'};
     if(n>(s.player.ships[k]||0))return {ok:false,message:'Não tens naves suficientes.'};clean[k]=n;count+=n;
   }
   if(mission==='spy'){if(clean.probe<1||count!==clean.probe)return {ok:false,message:'Para espionagem, envia apenas sondas.'};}
   else if(!count||fleetPower(clean,s.player.tech,s.player.race,s.player.activeLeader)<=0)return {ok:false,message:'Seleciona naves de combate.'};
   const fuel=Math.max(1,Math.ceil((count+1)*(target.system+5)/5));
-  if(s.player.resources.deuterium<fuel)return {ok:false,message:'Deutério insuficiente para o voo.'};
+  const details={ships:clean,count,fuel,travelMs:fleetTravelMs(target),capacity:fleetCapacity(clean),slotsUsed,slotsMax};
+  if(s.player.resources.deuterium<fuel)return {...details,ok:false,message:'Gás Vespeno insuficiente para o voo.'};
+  return {...details,ok:true,message:'Frota pronta para lançamento.'};
+}
+export function sendFleet(s,botId,ships,mission='attack') {
+  const preview=previewFleet(s,botId,ships,mission);if(!preview.ok)return {ok:false,message:preview.message};
+  const target=s.bots.find(b=>b.id===Number(botId)),{ships:clean,fuel,travelMs:eta}=preview;
   s.player.resources.deuterium-=fuel;for(const [k,n]of Object.entries(clean))s.player.ships[k]-=n;
-  const eta=fleetTravelMs(target),fleet={id:++s.seq,owner:'player',botId:target.id,mission,phase:'outbound',ships:clean,cargo:blank(),travelMs:eta,arrivesAt:s.lastSimulated+eta};
+  const fleet={id:++s.seq,owner:'player',botId:target.id,mission,phase:'outbound',ships:clean,cargo:blank(),travelMs:eta,arrivesAt:s.lastSimulated+eta};
   s.fleets.push(fleet);log(s,'Frota lançada',`${mission==='spy'?'Espionagem':'Ataque'} rumo a ${target.name} ${coords(target)}.`, 'info');
   return {ok:true,message:'Frota enviada.'};
 }
