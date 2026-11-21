@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="Alquimix">
+	<meta name="theme-color" content="#6A2FC9">
+	<meta name="description" content="Alquimix: Match-3 de alquimia com o Rei Lumi.">
+	<link rel="manifest" href="manifest.webmanifest">
+	<link rel="apple-touch-icon" href="icon-180.png">
+	<link rel="icon" href="icon-192.png" type="image/png">
+	<title>Alquimix</title>
+	<style>
+		:root { --frame: #6A2FC9; --frame-deep: #3E1678; --bar: #FF4FA0; --track: rgba(255, 255, 255, 0.25); }
+		html, body { margin: 0; height: 100%; overflow: hidden; background: var(--frame-deep); }
+		body {
+			color: #FFFFFF;
+			font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+			touch-action: none;
+			-webkit-user-select: none;
+			user-select: none;
+			-webkit-touch-callout: none;
+			-webkit-tap-highlight-color: transparent;
+			overscroll-behavior: none;
+		}
+		#app-container { position: relative; margin: 0 auto; overflow: hidden; background: linear-gradient(180deg, var(--frame), var(--frame-deep)); }
+		#canvas-container { width: 100%; height: 100%; }
+		#canvas { display: block; width: 100%; height: 100%; outline: none; border: 0; }
+		#loading-title {
+			position: absolute; inset: 38% 0 auto; text-align: center;
+			font-size: 2.4rem; font-weight: 800; letter-spacing: 0.06em;
+			text-shadow: 0 4px 0 var(--frame-deep); pointer-events: none;
+		}
+		.canvas-app-progress {
+			position: absolute; left: 50%; bottom: 18%; width: 60%; max-width: 320px; height: 14px;
+			transform: translateX(-50%); border-radius: 7px; background: var(--track); overflow: hidden;
+		}
+		.canvas-app-progress-bar { height: 100%; width: 100%; background: var(--bar); transform-origin: left center; border-radius: 7px; }
+		#webgl-not-supported { display: none; margin: 2em; }
+	</style>
+</head>
+<body>
+	<div id="app-container">
+		<div id="webgl-not-supported">
+			<h1>WebGL indisponível</h1>
+			<p>Este navegador não suporta WebGL, necessário para o Alquimix.</p>
+		</div>
+		<div id="loading-title">ALQUIMIX</div>
+		<div id="canvas-container">
+			<canvas id="canvas" tabindex="1" width="720" height="1280"></canvas>
+		</div>
+	</div>
+	<script>if (typeof globalThis === "undefined") { window.globalThis = window; }</script>
+	<script src="dmloader.js"></script>
+	<script>
+		var origRemove = ProgressView.removeProgress;
+		ProgressView.removeProgress = function () {
+			var t = document.getElementById("loading-title");
+			if (t) t.remove();
+			return origRemove.apply(this, arguments);
+		};
+		// iOS: stop the page from scrolling or bouncing while playing
+		document.addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });
+		EngineLoader.load("canvas", "Alquimix");
+	</script>
+</body>
+</html>

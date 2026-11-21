@@ -1,0 +1,10 @@
+name: "main"
+instances {
+  id: "game"
+  prototype: "/main/game.go"
+}
+instances {
+  id: "audio"
+  prototype: "/main/audio.go"
+}
+scale_along_z: 0

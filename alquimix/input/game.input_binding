@@ -1,0 +1,20 @@
+mouse_trigger {
+  input: MOUSE_BUTTON_LEFT
+  action: "touch"
+}
+mouse_trigger {
+  input: MOUSE_WHEEL_UP
+  action: "wheel_up"
+}
+mouse_trigger {
+  input: MOUSE_WHEEL_DOWN
+  action: "wheel_down"
+}
+key_trigger {
+  input: KEY_ESC
+  action: "back"
+}
+key_trigger {
+  input: KEY_BACK
+  action: "back"
+}

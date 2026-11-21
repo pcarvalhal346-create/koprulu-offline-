@@ -1,0 +1,10 @@
+/build
+/.internal
+/bundle
+/tools/art/node_modules
+/tools/art/out
+*.pyc
+__pycache__/
+debug.keystore
+debug.keystore.pass.txt
+/dist

@@ -1,0 +1,19 @@
+images {
+  image: "/assets/backgrounds/bg_menu.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/backgrounds/bg_world1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/backgrounds/bg_world2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/backgrounds/bg_world3.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+margin: 2
+extrude_borders: 2
+inner_padding: 0

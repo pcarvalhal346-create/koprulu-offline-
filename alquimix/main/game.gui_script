@@ -1,0 +1,84 @@
+-- Entry point: owns the shared context (profile, audio, effects, screens) and
+-- forwards update/input/resize events to the screen manager.
+local ui = require "gui.ui"
+local screens = require "gui.screen_manager"
+local save = require "scripts.save_manager"
+local audio = require "scripts.audio_manager"
+local effects = require "scripts.effects"
+local L = require "scripts.localization"
+
+--- Developer options (game.project section [elemental]); all default to 0.
+---   unlock_all = 1   every level unlocked
+---   start_level = N  open level N directly
+---   autoplay = 1     the bot (scripts/autoplay.lua) plays levels by itself
+local function dev_options()
+	local function get(k)
+		local ok, v = pcall(sys.get_config_int, "elemental." .. k, 0)
+		return ok and v or 0
+	end
+	return { unlock_all = get("unlock_all") == 1, start_level = get("start_level"), autoplay = get("autoplay") == 1 }
+end
+
+local function on_window(self, event)
+	if event == window.WINDOW_EVENT_RESIZED then
+		self.resize_t = 0.15
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	math.randomseed(os.time())
+	ui.metrics()
+
+	local profile = save.init(save.defold_backend())
+	audio.init(profile.settings)
+	effects.reduced = profile.settings.reduced_motion
+
+	self.ctx = {
+		profile = profile, settings = profile.settings, save = save, audio = audio,
+		effects = effects, screens = screens, L = L, dev = dev_options(),
+	}
+	if self.ctx.dev.unlock_all then
+		profile.unlocked = 60
+		profile.intro_seen = true
+	end
+	ui.on_click = function() audio.play("button") end
+	screens.register("menu", require "gui.main_menu")
+	screens.register("map", require "gui.world_map")
+	screens.register("game", require "gui.game_screen")
+	screens.register("book", require "gui.alchemy_book")
+	screens.init(self.ctx)
+	effects.init(screens.layers.fx)
+	window.set_listener(on_window)
+	if self.ctx.dev.start_level > 0 then
+		profile.intro_seen = true
+		screens.go("game", { level = self.ctx.dev.start_level })
+	else
+		screens.go("menu")
+	end
+end
+
+function update(self, dt)
+	if self.resize_t then
+		self.resize_t = self.resize_t - dt
+		if self.resize_t <= 0 then
+			self.resize_t = nil
+			screens.relayout()
+		end
+	end
+	screens.update(dt)
+end
+
+function on_input(self, action_id, action)
+	if action_id == nil then return false end
+	return screens.on_input(action_id, action)
+end
+
+function on_message(self, message_id)
+	if message_id == hash("save") then save.save() end
+end
+
+function final(self)
+	window.set_listener(nil)
+	save.save()
+end

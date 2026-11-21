@@ -1,0 +1,155 @@
+-- MUNDO 1 — O DESPERTAR (níveis 1–20)
+-- Floresta encantada. Introduz troca, carga, fusão, ativação, rochas, Ar,
+-- reações em duas etapas, gelo, raízes, Obsidiana e Cristal.
+-- See docs/LEVEL_CHANGES.md for every deviation from the original design table.
+local F, W, E, A = "fire", "water", "earth", "air"
+
+return {
+	{
+		id = 1, world = 1, name = "Primeiras Faíscas", moves = 16, seed = 1037,
+		elements = { F, W, E }, weights = { fire = 13 },
+		goals = { { type = "collect", id = F, count = 12 } },
+		tutorial = "first_match", board_preset = "tutorial_match",
+	},
+	{
+		id = 2, world = 1, name = "Energia Desperta", moves = 15, seed = 1074,
+		elements = { F, W, E },
+		goals = { { type = "charge", count = 3 } },
+		tutorial = "charge", board_preset = "tutorial_charge",
+	},
+	{
+		id = 3, world = 1, name = "A Primeira Fusão", moves = 17, seed = 1111,
+		elements = { F, W, E },
+		goals = { { type = "create", id = "steam", count = 1 } },
+		tutorial = "first_fusion", board_preset = "tutorial_fusion",
+	},
+	{
+		id = 4, world = 1, name = "Nuvens de Vapor", moves = 18, seed = 1148,
+		elements = { F, W, E }, weights = { fire = 11, water = 11, earth = 8 },
+		goals = { { type = "activate", id = "steam", count = 2 } },
+		tutorial = "activate", board_preset = "tutorial_activate",
+	},
+	{
+		id = 5, world = 1, name = "Coração de Lava", moves = 20, seed = 1185,
+		elements = { F, W, E },
+		goals = { { type = "create", id = "lava", count = 1 }, { type = "clear", id = "rock", count = 2 } },
+		layout = {
+			"........",
+			"........",
+			"........",
+			"........",
+			"........",
+			"........",
+			"..r.r...",
+			"r......r",
+		},
+		tutorial = "rocks", board_preset = "tutorial_lava",
+	},
+	{
+		id = 6, world = 1, name = "Sementes de Vida", moves = 17, seed = 1222,
+		elements = { F, W, E }, weights = { water = 11, earth = 11, fire = 8 },
+		goals = { { type = "create", id = "life", count = 2 } },
+		layers = { { pattern = "cut_corners", tile = "#" } },
+	},
+	{
+		id = 7, world = 1, name = "O Sopro do Ar", moves = 18, seed = 1259,
+		elements = { F, W, E, A }, weights = { fire = 11, air = 11 },
+		goals = { { type = "create", id = "plasma", count = 1 } },
+		tutorial = "air",
+	},
+	{
+		id = 8, world = 1, name = "Jardim Luminoso", moves = 19, seed = 1296,
+		elements = { F, W, E, A }, weights = { water = 12, earth = 12 },
+		goals = { { type = "activate", id = "life", count = 2 } },
+		layers = { { pattern = "corners", tile = "r" } },
+	},
+	{
+		id = 9, world = 1, name = "Tempestade em Gestação", moves = 21, seed = 1333,
+		elements = { F, W, E, A }, weights = { earth = 7 },
+		goals = { { type = "create", id = "storm", count = 1 } },
+		tutorial = "two_stage", board_preset = "tutorial_two_stage",
+	},
+	{
+		id = 10, world = 1, name = "Ruínas Esquecidas", moves = 24, seed = 1370,
+		elements = { F, W, E, A }, weights = { earth = 8 },
+		goals = { { type = "clear", id = "rock", count = 6 }, { type = "activate", id = "storm", count = 1 } },
+		layers = { { pattern = "bottom_pairs", tile = "r" } },
+	},
+	{
+		id = 11, world = 1, name = "Orvalho Gelado", moves = 23, seed = 1407,
+		elements = { F, W, E, A }, weights = { water = 11, air = 11 },
+		goals = { { type = "create", id = "ice", count = 1 }, { type = "clear", id = "frost", count = 3 } },
+		layers = { { pattern = "center4", tile = "i" } },
+		tutorial = "frost",
+	},
+	{
+		id = 12, world = 1, name = "Riacho Cristalino", moves = 22, seed = 1444,
+		elements = { F, W, E, A }, weights = { water = 14, fire = 11, earth = 7 },
+		goals = { { type = "collect", id = W, count = 22 }, { type = "create", id = "steam", count = 2 } },
+		layers = { { pattern = "cut_corners", tile = "#" } },
+	},
+	{
+		id = 13, world = 1, name = "Raízes Antigas", moves = 24, seed = 1481,
+		elements = { F, W, E, A }, weights = { water = 11, earth = 11, air = 8 },
+		goals = { { type = "clear", id = "vine", count = 4 }, { type = "create", id = "life", count = 2 } },
+		layers = { { pattern = "scatter_a", tile = "v" } },
+		tutorial = "vines",
+	},
+	{
+		id = 14, world = 1, name = "Trilho de Poeira", moves = 25, seed = 1518,
+		elements = { F, W, E, A }, weights = { earth = 11, air = 11, fire = 8 },
+		goals = { { type = "create", id = "dust", count = 2 }, { type = "clear", id = "vine", count = 4 } },
+		layers = { { pattern = "side_walls", tile = "v" } },
+	},
+	{
+		id = 15, world = 1, name = "Pedra Negra", moves = 25, seed = 1555,
+		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 11, air = 7 },
+		goals = { { type = "create", id = "obsidian", count = 1 }, { type = "clear", id = "rock", count = 5 } },
+		layers = { { pattern = "bottom_row", tile = "r" } },
+		tutorial = "obsidian", board_preset = "tutorial_obsidian",
+	},
+	{
+		id = 16, world = 1, name = "Bosque Renascido", moves = 24, seed = 1592,
+		elements = { F, W, E, A }, weights = { water = 14, earth = 11, fire = 7, air = 7 },
+		goals = { { type = "create", id = "forest", count = 1 } },
+		layers = { { pattern = "corners", tile = "r" } },
+	},
+	{
+		id = 17, world = 1, name = "Cristal Sussurrante", moves = 26, seed = 1629,
+		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 7 },
+		goals = { { type = "create", id = "crystal", count = 1 }, { type = "clear", id = "frost", count = 5 } },
+		layers = { { pattern = "scatter_b", tile = "i" } },
+		tutorial = "crystal", board_preset = "tutorial_crystal",
+	},
+	{
+		id = 18, world = 1, name = "Ventos do Vale", moves = 26, seed = 1666,
+		elements = { F, W, E, A }, weights = { fire = 11, air = 13, water = 8, earth = 8 },
+		goals = { { type = "activate", id = "plasma", count = 2 }, { type = "collect", id = A, count = 16 } },
+		layers = { { pattern = "middle_bar", tile = "r" } },
+	},
+	{
+		id = 19, world = 1, name = "Céu Inquieto", moves = 27, seed = 1703,
+		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 7 },
+		goals = { { type = "activate", id = "storm", count = 2 } },
+		layers = { { pattern = "diagonal", tile = "i" } },
+	},
+	{
+		id = 20, world = 1, name = "O Primeiro Grande Cristal", moves = 30, seed = 1740,
+		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 9 },
+		goals = {
+			{ type = "clear", id = "rock", count = 6 }, { type = "clear", id = "frost", count = 4 },
+			{ type = "clear", id = "vine", count = 4 }, { type = "create", id = "storm", count = 1 },
+		},
+		layout = {
+			"........",
+			".v....v.",
+			"..i..i..",
+			"........",
+			"..i..i..",
+			".v....v.",
+			"r......r",
+			"rr.rr.rr",
+		},
+		world_finale = true,
+	},
+}
