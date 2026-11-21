@@ -1,0 +1,11 @@
+{
+  "name": "alquimix-art",
+  "private": true,
+  "description": "Generates the original vector art of Alquimix (SVG -> PNG) and the Defold atlases.",
+  "type": "module",
+  "scripts": { "build": "node generate.mjs" },
+  "dependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "pngjs": "7.0.0"
+  }
+}
