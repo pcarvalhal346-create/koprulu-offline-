@@ -62,6 +62,7 @@ function M.validate(def)
 		if not patterns.get(layer.pattern) then err(errors, def, "unknown pattern %s", tostring(layer.pattern)) end
 		if not level_manager.CODES[layer.tile] then err(errors, def, "unknown tile %s", tostring(layer.tile)) end
 	end
+	if def.shape and not patterns.get(def.shape) then err(errors, def, "unknown shape %s", tostring(def.shape)) end
 	if def.layout then
 		if #def.layout ~= 8 then err(errors, def, "layout must have 8 rows") end
 		for y, row in ipairs(def.layout) do

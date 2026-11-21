@@ -29,6 +29,14 @@ acrescentados padrões de obstáculos que **não fazem parte dos objetivos**:
 - Mundo 3: corrupção também nos níveis 54, 56–59 ("combinações de mecânicas anteriores").
 - Níveis 6 e 12 usam cantos vazios (`cut_corners`) para um tabuleiro em forma de octógono.
 
+## Formas de tabuleiro
+
+30 níveis (sem tutorial) receberam uma silhueta com o campo `shape` (`shape_hex`, `shape_cross`,
+`shape_funnel`, `shape_notches`, `shape_crown`, em `data/obstacle_patterns.lua`). A silhueta só
+transforma em vazio as células normais, nunca obstáculos, e cada nível só ficou com uma forma que
+passa no validador (objetivos alcançáveis e todas as células reabastecíveis). Jogadas e objetivos
+não mudaram.
+
 ## Interpretações de regras
 
 - **Peças carregadas participam em combinações** como o seu elemento (se forem eliminadas por uma combinação contam para `collect`).

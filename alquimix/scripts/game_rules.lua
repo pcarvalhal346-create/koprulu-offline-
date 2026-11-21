@@ -152,20 +152,24 @@ end
 
 function Game:process_groups(groups, manual)
 	self.stats.matches = self.stats.matches + #groups
+	-- the charge cell is known before removal so the view can make pieces converge on it
+	local charge_of = {}
+	if manual then
+		for i, g in ipairs(groups) do
+			for _, m in ipairs(manual) do
+				if match.contains(g, m.x, m.y) then charge_of[i] = { x = m.x, y = m.y }; break end
+			end
+		end
+	end
 	local evgroups = {}
-	for _, g in ipairs(groups) do
-		evgroups[#evgroups + 1] = { id = g.id, size = g.size, shape = g.shape, cells = copy(g.cells) }
+	for i, g in ipairs(groups) do
+		evgroups[#evgroups + 1] = { id = g.id, size = g.size, shape = g.shape, cells = copy(g.cells), charge = charge_of[i] }
 	end
 	self:emit({ type = "match", cascade = self.cascade, groups = evgroups })
 
 	local removed, touched = {}, {}
-	for _, g in ipairs(groups) do
-		local charge_cell
-		if manual then
-			for _, m in ipairs(manual) do
-				if match.contains(g, m.x, m.y) then charge_cell = m; break end
-			end
-		end
+	for i, g in ipairs(groups) do
+		local charge_cell = charge_of[i]
 		for _, c in ipairs(g.cells) do
 			if not (charge_cell and charge_cell.x == c.x and charge_cell.y == c.y) then
 				local cell = self.board:cell(c.x, c.y)

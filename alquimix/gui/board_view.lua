@@ -4,13 +4,14 @@
 local ui = require "gui.ui"
 local effects = require "scripts.effects"
 local animations = require "scripts.animations"
+local element_fx = require "gui.element_fx"
 local elements = require "data.elements"
 
 local M = {}
 M.__index = M
 
 local V3 = vmath.vector3
-local PIECE = 0.9 -- piece size relative to the cell
+local PIECE = 0.92 -- piece size relative to the cell
 
 local OB_COLOR = { rock = "#9C8A70", frost = "#E6FAFF", vine = "#7CD67A", corruption = "#B030E0" }
 
@@ -20,13 +21,15 @@ local function key(x, y) return y * 64 + x end
 function M.create(parent, ctx, layout)
 	local self = setmetatable({
 		ctx = ctx, cell = layout.cell, cx = layout.cx, cy = layout.cy,
-		pieces = {}, blockers = {}, covers = {}, corrupt = {}, queue = animations.new(),
+		pieces = {}, blockers = {}, covers = {}, corrupt = {}, converge = {}, queue = animations.new(),
 		speed = ctx.settings.reduced_motion and 0.65 or 1,
 		callbacks = {},
 	}, M)
 	self.root = ui.container(parent, layout.cx, layout.cy)
 	local size = layout.cell * 8
-	self.frame = ui.box(0, 0, size + 34, size + 34, "board", "board_frame", { parent = self.root, slice = 40 })
+	-- the backdrop is built per cell in build() so it follows the board's shape
+	self.outline_c = ui.container(self.root)
+	self.base_c = ui.container(self.root)
 	self.tiles_c = ui.container(self.root)
 	self.terrain_c = ui.container(self.root)
 	self.blocker_c = ui.container(self.root)
@@ -66,6 +69,16 @@ function M:dur(d) return d * self.speed end
 function M:build(board)
 	self.board = board
 	local c = self.cell
+	-- shaped backdrop: a white rim and a blue base drawn under every playable cell
+	for y = 1, 8 do
+		for x = 1, 8 do
+			if not board:cell(x, y).void then
+				local lx, ly = self:local_pos(x, y)
+				ui.box(lx, ly, c + 20, c + 20, "ui", "round_rect", { parent = self.outline_c, color = "#FFFFFF", alpha = 0.95 })
+				ui.box(lx, ly, c + 8, c + 8, "ui", "round_rect", { parent = self.base_c, color = "#2E62C4", alpha = 0.92 })
+			end
+		end
+	end
 	for y = 1, 8 do
 		for x = 1, 8 do
 			local cell = board:cell(x, y)
@@ -271,12 +284,12 @@ end
 local H = {}
 
 function H.swap(self, e)
-	local d = self:dur(0.17)
+	local d = self:dur(0.13)
 	local ea, eb = self.pieces[e.ua], self.pieces[e.ub]
 	local ax, ay = self:local_pos(e.a.x, e.a.y)
 	local bx, by = self:local_pos(e.b.x, e.b.y)
-	if ea then gui.animate(ea.node, "position", V3(bx, by, 0), gui.EASING_OUTSINE, d) end
-	if eb then gui.animate(eb.node, "position", V3(ax, ay, 0), gui.EASING_OUTSINE, d) end
+	if ea then gui.animate(ea.node, "position", V3(bx, by, 0), gui.EASING_OUTQUAD, d) end
+	if eb then gui.animate(eb.node, "position", V3(ax, ay, 0), gui.EASING_OUTQUAD, d) end
 	self.ctx.audio.play("swap")
 	return d
 end
@@ -287,7 +300,7 @@ function H.invalid_swap(self, e)
 	local ea, eb = pa and self.pieces[pa.uid], pb and self.pieces[pb.uid]
 	local ax, ay = self:local_pos(e.a.x, e.a.y)
 	local bx, by = self:local_pos(e.b.x, e.b.y)
-	local d = self:dur(0.12)
+	local d = self:dur(0.09)
 	if e.reason == "no_match" and ea and eb then
 		gui.animate(ea.node, "position", V3(bx, by, 0), gui.EASING_OUTSINE, d, 0, nil, gui.PLAYBACK_ONCE_PINGPONG)
 		gui.animate(eb.node, "position", V3(ax, ay, 0), gui.EASING_OUTSINE, d, 0, nil, gui.PLAYBACK_ONCE_PINGPONG)
@@ -303,31 +316,31 @@ function H.invalid_swap(self, e)
 end
 
 function H.fusion(self, e)
-	local d = self:dur(0.5)
+	local d = self:dur(0.36)
 	local ea, eb = self.pieces[e.a.uid], self.pieces[e.b.uid]
 	local tx, ty = self:local_pos(e.to.x, e.to.y)
 	local wx, wy = self:world_pos(e.to.x, e.to.y)
-	if ea then
-		gui.animate(ea.node, "position", V3(tx, ty, 0), gui.EASING_INQUAD, d * 0.35)
-		gui.animate(ea.node, "scale", V3(0.2, 0.2, 1), gui.EASING_INQUAD, d * 0.5, d * 0.2)
+	local fx_, fy_ = self:world_pos(e.from.x, e.from.y)
+	-- both ingredients spin into the destination while their energy spirals in
+	for _, en in ipairs({ ea, eb }) do
+		if en then
+			gui.cancel_animations(en.node, "scale")
+			gui.animate(en.node, "position", V3(tx, ty, 0), gui.EASING_INQUAD, d * 0.45)
+			gui.animate(en.node, "euler.z", en == ea and 200 or -200, gui.EASING_INQUAD, d * 0.5)
+			gui.animate(en.node, "scale", V3(0.15, 0.15, 1), gui.EASING_INQUAD, d * 0.5)
+		end
 	end
-	if eb then gui.animate(eb.node, "scale", V3(0.2, 0.2, 1), gui.EASING_INQUAD, d * 0.5, d * 0.2) end
+	element_fx.fusion_gather(e.a.id, e.b.id, { x = fx_, y = fy_ }, { x = wx, y = wy }, { x = wx, y = wy }, self.cell, d * 0.5)
 	self.ctx.audio.play("fusion")
-	local color = ui.rgb(elements.info[e.result].color)
 	local function spawn_compound()
 		self:delete_piece(e.a.uid)
 		self:delete_piece(e.b.uid)
 		local entry = self:create_piece({ uid = e.uid, id = e.result, kind = "compound" }, e.to.x, e.to.y)
 		ui.pop_in(entry.node, 0, 1)
 		self:decorate(entry)
-		effects.flash(wx, wy, "fx_glow", self.cell * 2.6, color, 0.5)
-		effects.flash(wx, wy, "fx_ring", self.cell * 1.6, vmath.vector4(1, 1, 1, 1), 0.45, 2)
-		effects.burst(wx, wy, { count = 18, sprite = "fx_spark", color = color, speed = 240, size = 26 })
-		local ca, cb = elements.info[e.a.id].color, elements.info[e.b.id].color
-		effects.burst(wx, wy, { count = 8, sprite = "fx_dot", color = ui.rgb(ca), speed = 160 })
-		effects.burst(wx, wy, { count = 8, sprite = "fx_dot", color = ui.rgb(cb), speed = 160 })
+		element_fx.fusion_burst(e.result, wx, wy, self.cell)
 	end
-	timer.delay(d * 0.55, false, spawn_compound)
+	timer.delay(d * 0.5, false, spawn_compound)
 	return d
 end
 
@@ -339,6 +352,7 @@ function H.discovery(self, e)
 end
 
 function H.match(self, e)
+	self.converge = {}
 	local pitch = 1 + math.min(0.5, (e.cascade - 1) * 0.08)
 	self.ctx.audio.play("match", { speed = pitch })
 	for _, g in ipairs(e.groups) do
@@ -347,27 +361,41 @@ function H.match(self, e)
 			local key_t = g.shape == "line5" and "match.line5" or (g.shape == "cross" and "match.cross" or "match.line4")
 			self:floating_text(c.x, c.y, self.ctx.L(key_t), g.shape == "line5" and "pink" or "gold", 40)
 		end
-		for _, c in ipairs(g.cells) do
-			local wx, wy = self:world_pos(c.x, c.y)
-			effects.flash(wx, wy, "fx_glow", self.cell * 1.3, ui.rgb(elements.info[g.id].color), 0.3)
+		-- pieces of a manual match slide into the cell that becomes charged
+		if g.charge then
+			local tx, ty = self:local_pos(g.charge.x, g.charge.y)
+			for _, c in ipairs(g.cells) do
+				self.converge[key(c.x, c.y)] = { x = tx, y = ty, cx = g.charge.x, cy = g.charge.y }
+			end
 		end
 	end
-	return self:dur(0.1)
+	return self:dur(0.03)
 end
 
 function H.remove(self, e)
 	local en = self.pieces[e.uid]
-	local d = self:dur(0.24)
+	local d = self:dur(0.16)
 	local wx, wy = self:world_pos(e.x, e.y)
-	local info = elements.info[e.id]
-	local color = info and ui.rgb(info.color) or vmath.vector4(1, 1, 1, 1)
+	local target = self.converge and self.converge[key(e.x, e.y)]
 	if en then
 		self.pieces[e.uid] = nil
 		gui.cancel_animations(en.node, "scale")
-		gui.animate(en.node, "scale", V3(1.25, 1.25, 1), gui.EASING_OUTQUAD, d * 0.4)
-		gui.animate(en.node, "color.w", 0, gui.EASING_INQUAD, d * 0.6, d * 0.4, function() ui.delete(en.node) end)
+		gui.cancel_animations(en.node, "position")
+		if target then
+			-- slide into the charged piece, then burst there
+			local tw, th = self:world_pos(target.cx, target.cy)
+			element_fx.trail(e.id, wx, wy, tw, th, self.cell, d * 0.8)
+			gui.animate(en.node, "position", V3(target.x, target.y, 0), gui.EASING_INQUAD, d * 0.75)
+			gui.animate(en.node, "scale", V3(0.5, 0.5, 1), gui.EASING_INQUAD, d * 0.75, 0, function()
+				ui.delete(en.node)
+				element_fx.explode(e.id, e.kind, tw, th, self.cell * 0.7)
+			end)
+		else
+			gui.animate(en.node, "scale", V3(1.22, 1.22, 1), gui.EASING_OUTQUAD, d * 0.35)
+			gui.animate(en.node, "scale", V3(0.05, 0.05, 1), gui.EASING_INBACK, d * 0.6, d * 0.35, function() ui.delete(en.node) end)
+			element_fx.explode(e.id, e.kind, wx, wy, self.cell)
+		end
 	end
-	effects.burst(wx, wy, { count = 6, sprite = e.id == "fire" and "fx_flame" or (e.id == "water" and "fx_drop" or (e.id == "earth" and "fx_shard" or "fx_spark")), color = color, speed = 150, size = 22, gravity = 120 })
 	if self.callbacks.on_collect then self.callbacks.on_collect(e, wx, wy) end
 	return d
 end
@@ -377,7 +405,7 @@ function H.charge(self, e)
 	local wx, wy = self:world_pos(e.x, e.y)
 	if en then
 		en.kind = "charged"
-		timer.delay(self:dur(0.12), false, function()
+		timer.delay(self:dur(0.1), false, function()
 			if self.pieces[e.uid] == en then
 				self:decorate(en)
 				ui.pop_in(en.node, 0, 1)
@@ -388,7 +416,7 @@ function H.charge(self, e)
 	effects.burst(wx, wy, { count = 10, sprite = "fx_spark", color = ui.hex("gold"), speed = 180 })
 	self.ctx.audio.play("charge")
 	if self.callbacks.on_charge then self.callbacks.on_charge(e) end
-	return self:dur(0.3)
+	return self:dur(0.18)
 end
 
 local BREAK = {
@@ -416,7 +444,7 @@ function H.clear_obstacle(self, e)
 			gui.animate(node, "position.x", gui.get_position(node).x + 5, gui.EASING_INOUTSINE, 0.05, 0, nil, gui.PLAYBACK_ONCE_PINGPONG)
 		end
 	end
-	return self:dur(0.22)
+	return self:dur(0.16)
 end
 
 function H.activate(self, e)
@@ -432,7 +460,7 @@ function H.activate(self, e)
 	end
 	effects.flash(wx, wy, "fx_glow", self.cell * 3, color, 0.5)
 	effects.flash(wx, wy, "fx_ring", self.cell * 1.5, vmath.vector4(1, 1, 1, 1), 0.4, 2.4)
-	return self:dur(0.25)
+	return self:dur(0.18)
 end
 
 local function power_beams(self, e, color)
@@ -485,11 +513,11 @@ function H.power(self, e)
 		effects.flash(wx, wy, "fx_glow", self.cell * 2.5, color, 0.5)
 	end
 	local slow = id == "life" or id == "forest" or id == "crystal"
-	return self:dur(slow and 0.4 or 0.3)
+	return self:dur(slow and 0.3 or 0.22)
 end
 
 function H.transform(self, e)
-	local d = self:dur(0.3)
+	local d = self:dur(0.22)
 	for _, it in ipairs(e.items) do
 		local en = self.pieces[it.uid]
 		if en then
@@ -529,23 +557,23 @@ function H.gravity(self, e)
 				local p = segs[i]
 				local lx, ly = self:local_pos(p.x, p.y)
 				if p.how == "portal" then
-					local d1 = self:dur(0.09)
+					local d1 = self:dur(0.07)
 					gui.animate(node, "scale", V3(0.05, 0.05, 1), gui.EASING_INQUAD, d1, 0, function()
 						gui.set_position(node, V3(lx, ly, 0))
 						gui.animate(node, "scale", V3(1, 1, 1), gui.EASING_OUTBACK, d1, 0, function() step(i + 1, p) end)
 					end)
 				else
 					local dist = prev and math.max(math.abs(p.y - prev.y), math.abs(p.x - prev.x)) or 1
-					local d = self:dur(0.05 + 0.055 * dist)
+					local d = self:dur(0.03 + 0.04 * dist)
 					gui.animate(node, "position", V3(lx, ly, 0), i == #segs and gui.EASING_OUTBACK or gui.EASING_INQUAD, d, 0, function() step(i + 1, p) end)
 				end
 			end
 			for i = 1, #segs do
 				local p, prev = segs[i], segs[i - 1] or origin
 				if p.how == "portal" then
-					total = total + self:dur(0.18)
+					total = total + self:dur(0.14)
 				else
-					total = total + self:dur(0.05 + 0.055 * math.max(math.abs(p.y - prev.y), math.abs(p.x - prev.x)))
+					total = total + self:dur(0.03 + 0.04 * math.max(math.abs(p.y - prev.y), math.abs(p.x - prev.x)))
 				end
 			end
 			step(1, origin)
@@ -563,7 +591,7 @@ function H.cascade(self, e)
 end
 
 function H.conveyor(self, e)
-	local d = self:dur(0.35)
+	local d = self:dur(0.25)
 	for _, mv in ipairs(e.moves) do
 		local en = self.pieces[mv.uid]
 		if en then
@@ -593,11 +621,11 @@ function H.corruption_spread(self, e)
 	end
 	effects.burst(wx, wy, { count = 10, sprite = "fx_smoke", color = ui.hex("#7A1FA8"), speed = 90, add = false })
 	self.ctx.audio.play("invalid", { speed = 0.6 })
-	return self:dur(0.35)
+	return self:dur(0.25)
 end
 
 function H.shuffle(self, e)
-	local d = self:dur(0.6)
+	local d = self:dur(0.45)
 	if self.callbacks.on_shuffle then self.callbacks.on_shuffle() end
 	self.ctx.audio.play("shuffle")
 	local recolor = {}

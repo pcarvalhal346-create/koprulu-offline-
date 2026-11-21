@@ -80,6 +80,16 @@ function M.layout_grid(def)
 			end
 		end
 	end
+	-- board silhouette: only cells that are still plain become void
+	if def.shape then
+		local pat = patterns.get(def.shape)
+		assert(pat, "unknown shape " .. tostring(def.shape))
+		for y, row in ipairs(pat) do
+			for x = 1, #row do
+				if row:sub(x, x) == "x" and grid[y][x] == "." then grid[y][x] = "#" end
+			end
+		end
+	end
 	return grid
 end
 

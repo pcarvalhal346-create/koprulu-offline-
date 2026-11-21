@@ -2,7 +2,7 @@
 -- so effects never create nodes per frame. Honours "reduce animations".
 local M = {}
 
-M.POOL = 160
+M.POOL = 320
 M.reduced = false
 
 local V3 = vmath.vector3

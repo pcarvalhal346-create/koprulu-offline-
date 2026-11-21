@@ -25,5 +25,13 @@ export const fx = {
   swirl: () => svg(128, 128, `<g filter="url(#g)"><path d="M64 64 m0 -8 a8 8 0 1 1 -8 8 a18 18 0 0 1 18 -18 a28 28 0 0 1 28 28 a38 38 0 0 1 -38 38 a46 46 0 0 1 -44 -32" stroke="#FFFFFF" stroke-width="10" fill="none" stroke-linecap="round"/></g>`, glowFilter('g', 2)),
   question: () => svg(64, 64, `<text x="32" y="50" text-anchor="middle" font-family="Fredoka" font-size="52" fill="#FFFFFF" stroke="#3A2B94" stroke-width="5" paint-order="stroke">?</text>`),
   exclaim: () => svg(64, 64, `<text x="32" y="52" text-anchor="middle" font-family="Fredoka" font-size="56" fill="#FFD36A" stroke="#8A4F00" stroke-width="5" paint-order="stroke">!</text>`),
+  // element-specific particles
+  bubble: () => svg(48, 48, `<circle cx="24" cy="24" r="20" fill="#FFFFFF" fill-opacity="0.18" stroke="#FFFFFF" stroke-width="3"/>` +
+    `<ellipse cx="17" cy="16" rx="6" ry="4" fill="#FFFFFF" opacity="0.9"/>`),
+  chip: () => svg(48, 48, `<path d="M8 20 L22 6 L40 12 L42 32 L26 42 L10 36 Z" fill="#FFFFFF"/><path d="M8 20 L22 6 L26 22 Z" fill="#FFFFFF" opacity="0.6"/>`),
+  ember: () => svg(32, 48, `<ellipse cx="16" cy="24" rx="8" ry="20" fill="url(#e)"/>`,
+    rad('e', [[0, '#FFFFFF'], [0.4, '#FFFFFF', 0.85], [1, '#FFFFFF', 0]])),
+  wind: () => svg(96, 48, `<path d="M6 30 C30 6 60 6 74 20 C84 30 74 42 64 36" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round"/>` +
+    `<path d="M14 40 L52 40" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.7"/>`),
   heart: () => svg(64, 64, `<path d="M32 56 C10 40 4 28 10 18 C16 8 28 10 32 20 C36 10 48 8 54 18 C60 28 54 40 32 56 Z" fill="#FF75C9" stroke="#FFFFFF" stroke-width="3"/>`),
 };

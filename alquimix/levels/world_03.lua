@@ -26,7 +26,7 @@ return {
 		tutorial = "portals",
 	},
 	{
-		id = 42, world = 3, name = "Correntes Ascendentes", moves = 29, seed = 3078,
+		id = 42, world = 3, name = "Correntes Ascendentes", moves = 29, seed = 3078, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { air = 14, fire = 11 },
 		goals = { { type = "collect", id = A, count = 28 }, { type = "create", id = "plasma", count = 2 } },
 		layout = {
@@ -42,7 +42,7 @@ return {
 		terrain = { portals = { portal(1, 4, 1, 6), portal(8, 4, 8, 6) } },
 	},
 	{
-		id = 43, world = 3, name = "Ilhas de Pedra", moves = 29, seed = 3115,
+		id = 43, world = 3, name = "Ilhas de Pedra", moves = 29, seed = 3115, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 11, air = 6 },
 		goals = { { type = "clear", id = "rock", count = 10 }, { type = "create", id = "obsidian", count = 1 } },
 		layout = {
@@ -74,7 +74,7 @@ return {
 		terrain = { portals = { portal(1, 3, 1, 5), portal(8, 3, 8, 5) } },
 	},
 	{
-		id = 45, world = 3, name = "Jardins Suspensos", moves = 30, seed = 3189,
+		id = 45, world = 3, name = "Jardins Suspensos", moves = 30, seed = 3189, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { earth = 12, air = 12, water = 8 },
 		goals = { { type = "clear", id = "vine", count = 10 }, { type = "activate", id = "dust", count = 3 } },
 		layout = {
@@ -90,7 +90,7 @@ return {
 		terrain = { portals = { portal(1, 6, 1, 8), portal(8, 6, 8, 8) } },
 	},
 	{
-		id = 46, world = 3, name = "Floresta nas Nuvens", moves = 31, seed = 3226,
+		id = 46, world = 3, name = "Floresta nas Nuvens", moves = 31, seed = 3226, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { water = 14, earth = 12, fire = 7, air = 7 },
 		goals = { { type = "create", id = "forest", count = 2 }, { type = "activate", id = "life", count = 2 } },
 		layout = {
@@ -106,7 +106,7 @@ return {
 		terrain = { portals = { portal(1, 2, 1, 4), portal(8, 2, 8, 4) } },
 	},
 	{
-		id = 47, world = 3, name = "Olho da Tempestade", moves = 32, seed = 3263,
+		id = 47, world = 3, name = "Olho da Tempestade", moves = 32, seed = 3263, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 6 },
 		goals = { { type = "activate", id = "storm", count = 3 } },
 		layout = {
@@ -138,7 +138,7 @@ return {
 		terrain = { portals = { portal(1, 3, 1, 5), portal(8, 3, 8, 5) } },
 	},
 	{
-		id = 49, world = 3, name = "Torre de Cristal", moves = 32, seed = 3337,
+		id = 49, world = 3, name = "Torre de Cristal", moves = 32, seed = 3337, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 13, air = 11, earth = 6 },
 		goals = { { type = "create", id = "crystal", count = 2 }, { type = "collect", id = W, count = 20 } },
 		layout = {
@@ -154,7 +154,7 @@ return {
 		terrain = { portals = { portal(1, 4, 1, 6), portal(8, 4, 8, 6) } },
 	},
 	{
-		id = 50, world = 3, name = "Ponte dos Ventos", moves = 34, seed = 3374,
+		id = 50, world = 3, name = "Ponte dos Ventos", moves = 34, seed = 3374, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 10, air = 10 },
 		goals = { { type = "clear", id = "rock", count = 10 }, { type = "clear", id = "frost", count = 8 } },
 		layout = {
@@ -194,21 +194,21 @@ return {
 		terrain = { corruption = { period = 3, limit = 6, max_cells = 16 } },
 	},
 	{
-		id = 53, world = 3, name = "Florestas Corrompidas", moves = 31, seed = 3485,
+		id = 53, world = 3, name = "Florestas Corrompidas", moves = 31, seed = 3485, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { water = 13, earth = 12, fire = 7, air = 7 },
 		goals = { { type = "activate", id = "forest", count = 2 }, { type = "clear", id = "corruption", count = 9 } },
 		layers = { { pattern = "center_ring", tile = "c" } },
 		terrain = { corruption = { period = 3, limit = 6, max_cells = 18 } },
 	},
 	{
-		id = 54, world = 3, name = "Nevoeiro Elétrico", moves = 32, seed = 3522,
+		id = 54, world = 3, name = "Nevoeiro Elétrico", moves = 32, seed = 3522, shape = "shape_hex",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 12, air = 11, earth = 6 },
 		goals = { { type = "create", id = "steam", count = 3 }, { type = "activate", id = "storm", count = 2 } },
 		layers = { { pattern = "corners", tile = "c" } },
 		terrain = { corruption = { period = 3, limit = 4, max_cells = 10 } },
 	},
 	{
-		id = 55, world = 3, name = "Muralha Sombria", moves = 34, seed = 3559,
+		id = 55, world = 3, name = "Muralha Sombria", moves = 34, seed = 3559, shape = "shape_cross",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 10, air = 9 },
 		goals = { { type = "clear", id = "rock", count = 12 }, { type = "clear", id = "corruption", count = 10 } },
 		layout = {
@@ -234,7 +234,7 @@ return {
 		},
 	},
 	{
-		id = 57, world = 3, name = "Portal Negro", moves = 35, seed = 3633,
+		id = 57, world = 3, name = "Portal Negro", moves = 35, seed = 3633, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 11, air = 6 },
 		goals = { { type = "create", id = "obsidian", count = 2 }, { type = "clear", id = "rock", count = 13 } },
 		layout = {
@@ -253,7 +253,7 @@ return {
 		},
 	},
 	{
-		id = 58, world = 3, name = "Raízes da Corrupção", moves = 36, seed = 3670,
+		id = 58, world = 3, name = "Raízes da Corrupção", moves = 36, seed = 3670, shape = "shape_notches",
 		elements = { F, W, E, A }, weights = { earth = 12, air = 12, water = 8 },
 		goals = { { type = "clear", id = "vine", count = 12 }, { type = "create", id = "dust", count = 3 } },
 		layout = {
@@ -272,7 +272,7 @@ return {
 		},
 	},
 	{
-		id = 59, world = 3, name = "Coração da Tempestade", moves = 36, seed = 3707,
+		id = 59, world = 3, name = "Coração da Tempestade", moves = 36, seed = 3707, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 6 },
 		goals = { { type = "activate", id = "storm", count = 3 }, { type = "create", id = "crystal", count = 2 } },
 		layout = {

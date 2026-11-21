@@ -257,7 +257,7 @@ function M:intro_banner()
 	ui.text(0, -62, table.concat(goals, " · "), { parent = b, size = 22, width = 560, color = "#D9C8FF" })
 	ui.pop_in(b, 0.1, 1)
 	self.banner = b
-	self.banner_t = self.ctx.settings.reduced_motion and 1.0 or 1.8
+	self.banner_t = self.ctx.settings.reduced_motion and 0.8 or 1.2
 end
 
 function M:end_banner()

@@ -70,7 +70,7 @@ return {
 		tutorial = "two_stage", board_preset = "tutorial_two_stage",
 	},
 	{
-		id = 10, world = 1, name = "Ruínas Esquecidas", moves = 24, seed = 1370,
+		id = 10, world = 1, name = "Ruínas Esquecidas", moves = 24, seed = 1370, shape = "shape_hex",
 		elements = { F, W, E, A }, weights = { earth = 8 },
 		goals = { { type = "clear", id = "rock", count = 6 }, { type = "activate", id = "storm", count = 1 } },
 		layers = { { pattern = "bottom_pairs", tile = "r" } },
@@ -96,7 +96,7 @@ return {
 		tutorial = "vines",
 	},
 	{
-		id = 14, world = 1, name = "Trilho de Poeira", moves = 25, seed = 1518,
+		id = 14, world = 1, name = "Trilho de Poeira", moves = 25, seed = 1518, shape = "shape_cross",
 		elements = { F, W, E, A }, weights = { earth = 11, air = 11, fire = 8 },
 		goals = { { type = "create", id = "dust", count = 2 }, { type = "clear", id = "vine", count = 4 } },
 		layers = { { pattern = "side_walls", tile = "v" } },
@@ -122,13 +122,13 @@ return {
 		tutorial = "crystal", board_preset = "tutorial_crystal",
 	},
 	{
-		id = 18, world = 1, name = "Ventos do Vale", moves = 26, seed = 1666,
+		id = 18, world = 1, name = "Ventos do Vale", moves = 26, seed = 1666, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { fire = 11, air = 13, water = 8, earth = 8 },
 		goals = { { type = "activate", id = "plasma", count = 2 }, { type = "collect", id = A, count = 16 } },
 		layers = { { pattern = "middle_bar", tile = "r" } },
 	},
 	{
-		id = 19, world = 1, name = "Céu Inquieto", moves = 27, seed = 1703,
+		id = 19, world = 1, name = "Céu Inquieto", moves = 27, seed = 1703, shape = "shape_notches",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 7 },
 		goals = { { type = "activate", id = "storm", count = 2 } },
 		layers = { { pattern = "diagonal", tile = "i" } },

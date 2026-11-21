@@ -20,7 +20,7 @@ return {
 		tutorial = "hard_rocks",
 	},
 	{
-		id = 22, world = 2, name = "Fendas de Obsidiana", moves = 26, seed = 2058,
+		id = 22, world = 2, name = "Fendas de Obsidiana", moves = 26, seed = 2058, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 11, air = 6 },
 		goals = { { type = "activate", id = "obsidian", count = 1 }, { type = "clear", id = "rock", count = 7 } },
 		layout = {
@@ -35,7 +35,7 @@ return {
 		},
 	},
 	{
-		id = 23, world = 2, name = "Gelo sobre Brasas", moves = 25, seed = 2095,
+		id = 23, world = 2, name = "Gelo sobre Brasas", moves = 25, seed = 2095, shape = "shape_hex",
 		elements = { F, W, E, A }, weights = { water = 12, air = 12, earth = 7 },
 		goals = { { type = "create", id = "ice", count = 2 }, { type = "clear", id = "frost", count = 6 } },
 		layers = { { pattern = "scatter_b", tile = "I" } },
@@ -47,7 +47,7 @@ return {
 		layers = { { pattern = "pillars", tile = "r" } },
 	},
 	{
-		id = 25, world = 2, name = "Rio de Magma", moves = 27, seed = 2169,
+		id = 25, world = 2, name = "Rio de Magma", moves = 27, seed = 2169, shape = "shape_cross",
 		elements = { F, W, E, A }, weights = { fire = 13, earth = 13, air = 6 },
 		goals = { { type = "activate", id = "lava", count = 3 }, { type = "clear", id = "rock", count = 9 } },
 		layout = {
@@ -62,13 +62,13 @@ return {
 		},
 	},
 	{
-		id = 26, world = 2, name = "Oásis Escondido", moves = 27, seed = 2206,
+		id = 26, world = 2, name = "Oásis Escondido", moves = 27, seed = 2206, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { water = 14, earth = 11, fire = 7, air = 7 },
 		goals = { { type = "create", id = "forest", count = 2 }, { type = "clear", id = "vine", count = 6 } },
 		layers = { { pattern = "diamond", tile = "v" } },
 	},
 	{
-		id = 27, world = 2, name = "Géiseres Uivantes", moves = 27, seed = 2243,
+		id = 27, world = 2, name = "Géiseres Uivantes", moves = 27, seed = 2243, shape = "shape_notches",
 		elements = { F, W, E, A }, weights = { water = 13, fire = 11, air = 11, earth = 6 },
 		goals = { { type = "create", id = "storm", count = 2 }, { type = "collect", id = W, count = 20 } },
 		layers = { { pattern = "side_walls", tile = "r" } },
@@ -80,13 +80,13 @@ return {
 		layers = { { pattern = "center_ring", tile = "v" } },
 	},
 	{
-		id = 29, world = 2, name = "Caverna de Cristal", moves = 28, seed = 2317,
+		id = 29, world = 2, name = "Caverna de Cristal", moves = 28, seed = 2317, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 6 },
 		goals = { { type = "create", id = "crystal", count = 2 }, { type = "clear", id = "frost", count = 7 } },
 		layers = { { pattern = "corners", tile = "I" }, { pattern = "center4", tile = "i" } },
 	},
 	{
-		id = 30, world = 2, name = "Fornalha Antiga", moves = 30, seed = 2354,
+		id = 30, world = 2, name = "Fornalha Antiga", moves = 30, seed = 2354, shape = "shape_hex",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11 },
 		goals = { { type = "clear", id = "rock", count = 10 }, { type = "clear", id = "frost", count = 5 } },
 		layout = {
@@ -114,21 +114,21 @@ return {
 		terrain = { conveyors = { { axis = "row", index = 3, dir = 1 }, { axis = "row", index = 6, dir = -1 } } },
 	},
 	{
-		id = 33, world = 2, name = "Turbinas de Vapor", moves = 28, seed = 2465,
+		id = 33, world = 2, name = "Turbinas de Vapor", moves = 28, seed = 2465, shape = "shape_funnel",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 6 },
 		goals = { { type = "create", id = "storm", count = 2 } },
 		layers = { { pattern = "corners", tile = "r" } },
 		terrain = { conveyors = { { axis = "row", index = 5, dir = -1 } } },
 	},
 	{
-		id = 34, world = 2, name = "Linha de Plasma", moves = 29, seed = 2502,
+		id = 34, world = 2, name = "Linha de Plasma", moves = 29, seed = 2502, shape = "shape_notches",
 		elements = { F, W, E, A }, weights = { fire = 12, air = 12, earth = 8 },
 		goals = { { type = "activate", id = "plasma", count = 3 } },
 		layers = { { pattern = "center4", tile = "r" } },
 		terrain = { conveyors = { { axis = "row", index = 2, dir = 1 }, { axis = "row", index = 7, dir = -1 } } },
 	},
 	{
-		id = 35, world = 2, name = "Forja de Obsidiana", moves = 30, seed = 2539,
+		id = 35, world = 2, name = "Forja de Obsidiana", moves = 30, seed = 2539, shape = "shape_notches",
 		elements = { F, W, E, A }, weights = { fire = 11, earth = 11, water = 11, air = 6 },
 		goals = { { type = "clear", id = "rock", count = 10 }, { type = "create", id = "obsidian", count = 1 } },
 		layout = {
@@ -151,21 +151,21 @@ return {
 		terrain = { conveyors = { { axis = "row", index = 2, dir = -1 } } },
 	},
 	{
-		id = 37, world = 2, name = "Jardins de Cinza", moves = 30, seed = 2613,
+		id = 37, world = 2, name = "Jardins de Cinza", moves = 30, seed = 2613, shape = "shape_crown",
 		elements = { F, W, E, A }, weights = { water = 13, earth = 13, fire = 7, air = 7 },
 		goals = { { type = "activate", id = "forest", count = 2 }, { type = "collect", id = E, count = 18 } },
 		layers = { { pattern = "corners", tile = "r" } },
 		terrain = { conveyors = { { axis = "row", index = 4, dir = 1 }, { axis = "row", index = 6, dir = 1 } } },
 	},
 	{
-		id = 38, world = 2, name = "Condensadores Gelados", moves = 31, seed = 2650,
+		id = 38, world = 2, name = "Condensadores Gelados", moves = 31, seed = 2650, shape = "shape_hex",
 		elements = { F, W, E, A }, weights = { water = 12, air = 12, earth = 7 },
 		goals = { { type = "activate", id = "ice", count = 3 }, { type = "clear", id = "frost", count = 8 } },
 		layers = { { pattern = "bottom_pairs", tile = "i" }, { pattern = "corners", tile = "i" } },
 		terrain = { conveyors = { { axis = "row", index = 4, dir = -1 } } },
 	},
 	{
-		id = 39, world = 2, name = "Prisma Rotativo", moves = 32, seed = 2687,
+		id = 39, world = 2, name = "Prisma Rotativo", moves = 32, seed = 2687, shape = "shape_notches",
 		elements = { F, W, E, A }, weights = { fire = 11, water = 11, air = 11, earth = 6 },
 		goals = { { type = "create", id = "crystal", count = 2 }, { type = "clear", id = "frost", count = 9 } },
 		layers = { { pattern = "diamond", tile = "i" } },
