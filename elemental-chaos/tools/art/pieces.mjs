@@ -1,0 +1,165 @@
+// Element pieces (128x128): 4 base elements, their charged states and 10 compounds.
+// Every element has its own silhouette so it is recognisable without colour.
+import { svg, lin, rad, shadowFilter, glowFilter, sparkle, star } from './lib.mjs';
+
+const S = 128;
+const common = shadowFilter('sh', 4, 3, 0.45) + glowFilter('gl', 5) + glowFilter('gl2', 2.5);
+
+// ------------------------------------------------------------------ bodies --
+function fireBody() {
+  const defs = lin('f1', [[0, '#FFE27A'], [0.45, '#FF8A3D'], [1, '#E2361F']], 0, 0, 0, 1) +
+    rad('f2', [[0, '#FFFBE0'], [0.6, '#FFD15C'], [1, '#FF9A3C', 0]], 0.5, 0.7, 0.5);
+  const outer = 'M64 10 C70 30 92 38 96 62 C100 84 90 108 64 116 C38 108 28 84 32 64 C34 50 42 44 46 34 C50 46 54 52 58 54 C56 38 58 24 64 10 Z';
+  const inner = 'M64 52 C70 64 80 70 80 86 C80 100 72 108 64 108 C56 108 48 100 48 88 C48 76 56 72 58 62 C60 68 62 70 64 72 C63 64 62 58 64 52 Z';
+  const body = `<g filter="url(#sh)"><path d="${outer}" fill="url(#f1)" stroke="#9C2412" stroke-width="3"/></g>` +
+    `<path d="${inner}" fill="url(#f2)"/>` +
+    `<path d="M50 40 C46 52 40 60 42 74" stroke="#FFF3C4" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.7"/>`;
+  return { defs, body };
+}
+
+function waterBody() {
+  const defs = lin('w1', [[0, '#B9F4FF'], [0.5, '#36C9F6'], [1, '#1767C9']], 0, 0, 0.3, 1) +
+    rad('w2', [[0, '#FFFFFF', 0.9], [1, '#FFFFFF', 0]], 0.35, 0.35, 0.4);
+  const drop = 'M64 8 C76 30 102 56 102 80 C102 102 85 118 64 118 C43 118 26 102 26 80 C26 56 52 30 64 8 Z';
+  const body = `<g filter="url(#sh)"><path d="${drop}" fill="url(#w1)" stroke="#0E4E9A" stroke-width="3"/></g>` +
+    `<ellipse cx="50" cy="74" rx="14" ry="20" fill="url(#w2)"/>` +
+    `<path d="M80 94 C86 88 88 80 86 72" stroke="#E8FCFF" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.8"/>` +
+    `<circle cx="74" cy="56" r="5" fill="#E8FCFF" opacity="0.85"/><circle cx="56" cy="100" r="3" fill="#E8FCFF" opacity="0.6"/>`;
+  return { defs, body };
+}
+
+function earthBody() {
+  const defs = lin('e1', [[0, '#B8FFD2'], [0.5, '#51D989'], [1, '#13834A']]) + lin('e2', [[0, '#7CF0AE'], [1, '#1FA55F']], 0, 0, 1, 1);
+  // faceted emerald (hexagonal cut)
+  const outer = 'M64 10 L104 34 L104 94 L64 118 L24 94 L24 34 Z';
+  const top = 'M64 26 L88 40 L88 86 L64 100 L40 86 L40 40 Z';
+  const body = `<g filter="url(#sh)"><path d="${outer}" fill="url(#e1)" stroke="#0B5A31" stroke-width="3" stroke-linejoin="round"/></g>` +
+    `<path d="${top}" fill="url(#e2)" stroke="#E9FFF2" stroke-opacity="0.5" stroke-width="2"/>` +
+    `<path d="M64 10 L64 26 M104 34 L88 40 M104 94 L88 86 M64 118 L64 100 M24 94 L40 86 M24 34 L40 40" stroke="#0B5A31" stroke-opacity="0.45" stroke-width="2"/>` +
+    `<path d="M44 44 L60 34 L60 56 L44 64 Z" fill="#FFFFFF" opacity="0.45"/>` +
+    `<path d="${sparkle(84, 32, 9)}" fill="#FFFFFF" opacity="0.9"/>`;
+  return { defs, body };
+}
+
+function airBody() {
+  const defs = rad('a1', [[0, '#F4EDFF'], [0.55, '#C9B2FF'], [1, '#7C5BE0']], 0.4, 0.35, 0.65);
+  const body = `<g filter="url(#sh)"><circle cx="64" cy="64" r="48" fill="url(#a1)" stroke="#4D33A8" stroke-width="3"/></g>` +
+    // spiral of wind
+    `<path d="M64 64 m0 -6 a6 6 0 1 1 -6 6 a14 14 0 0 1 14 -14 a22 22 0 0 1 22 22 a30 30 0 0 1 -30 30 a36 36 0 0 1 -34 -26"` +
+    ` stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.95"/>` +
+    `<path d="M28 44 C40 36 52 34 62 36" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.6"/>` +
+    `<path d="M92 92 C100 84 104 76 104 66" stroke="#EDE4FF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>`;
+  return { defs, body };
+}
+
+const BASE = { fire: fireBody, water: waterBody, earth: earthBody, air: airBody };
+const CHARGE_COLOR = { fire: '#FFB347', water: '#7FE8FF', earth: '#8CFFB8', air: '#D9C8FF' };
+
+export function basePiece(id) {
+  const b = BASE[id]();
+  return svg(S, S, b.body, common + b.defs);
+}
+
+/** Charged state: same silhouette, energy halo, rune and sparks. */
+export function chargedPiece(id) {
+  const b = BASE[id]();
+  const c = CHARGE_COLOR[id];
+  const halo = rad('hal', [[0.55, c, 0], [0.8, c, 0.85], [1, c, 0]]);
+  const body = `<circle cx="64" cy="64" r="62" fill="url(#hal)"/>` +
+    `<circle cx="64" cy="64" r="57" fill="none" stroke="${c}" stroke-width="3" stroke-dasharray="10 7" opacity="0.9"/>` +
+    `<g transform="translate(64 64) scale(0.86) translate(-64 -64)">${b.body}</g>` +
+    // golden rune (energy symbol) at the centre
+    `<g filter="url(#gl2)"><path d="${star(64, 70, 17, 7, 4, -90)}" fill="#FFFFFF" opacity="0.9"/></g>` +
+    `<path d="${star(64, 70, 14, 5.5, 4, -90)}" fill="#FFD36A" stroke="#A66A00" stroke-width="1.5"/>` +
+    `<path d="${sparkle(20, 22, 9)}" fill="#FFFFFF"/><path d="${sparkle(108, 30, 7)}" fill="#FFFFFF"/>` +
+    `<path d="${sparkle(104, 106, 8)}" fill="#FFFFFF"/>`;
+  return svg(S, S, body, common + b.defs + halo);
+}
+
+// --------------------------------------------------------------- compounds --
+// Compounds sit on a gold-rimmed medallion so they read as "special" pieces.
+function medallion(c1, c2) {
+  return rad('md', [[0, c1], [1, c2]], 0.5, 0.4, 0.6) + lin('rim', [[0, '#FFF1B8'], [0.5, '#FFD36A'], [1, '#B5791A']]);
+}
+function wrap(inner, c1, c2, defs = '') {
+  const body = `<g filter="url(#sh)"><circle cx="64" cy="64" r="56" fill="url(#md)"/></g>` +
+    `<circle cx="64" cy="64" r="56" fill="none" stroke="url(#rim)" stroke-width="6"/>` +
+    `<circle cx="64" cy="64" r="50" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2"/>` +
+    inner +
+    `<path d="M30 40 A40 40 0 0 1 64 20" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.35"/>`;
+  return svg(S, S, body, common + medallion(c1, c2) + defs);
+}
+
+const COMPOUNDS = {
+  steam: () => wrap(
+    `<path d="M40 84 C28 84 26 68 38 66 C36 54 50 48 58 56 C62 44 80 44 82 58 C94 56 100 70 90 78 C94 88 82 94 76 88 C70 94 56 94 52 88 C48 92 40 90 40 84 Z" fill="url(#st1)" stroke="#7FA6C9" stroke-width="2.5"/>` +
+    `<path d="M50 50 C46 42 54 36 50 28 M66 46 C62 38 70 32 66 22 M82 50 C78 42 86 36 82 28" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.85"/>` +
+    `<ellipse cx="54" cy="68" rx="10" ry="5" fill="#FFFFFF" opacity="0.8"/>`,
+    '#5B8FD6', '#1D3B78', lin('st1', [[0, '#FFFFFF'], [1, '#C7DEF5']])),
+  lava: () => wrap(
+    `<path d="M30 78 C26 60 40 40 64 38 C90 36 104 58 98 78 C94 94 76 102 62 100 C44 100 34 92 30 78 Z" fill="#3B1C14" stroke="#1A0B07" stroke-width="2.5"/>` +
+    `<path d="M40 70 L52 62 L58 72 L70 58 L76 70 L90 64 M50 86 L62 80 L72 90 L84 82" stroke="url(#lv1)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` +
+    `<g filter="url(#gl)"><path d="M40 70 L52 62 L58 72 L70 58 L76 70 L90 64" stroke="#FF7A1A" stroke-width="8" fill="none" opacity="0.8"/></g>` +
+    `<circle cx="64" cy="30" r="5" fill="#FFB347"/><circle cx="80" cy="26" r="3" fill="#FFD36A"/><circle cx="48" cy="28" r="3.5" fill="#FF7A1A"/>`,
+    '#B2421A', '#4A1206', lin('lv1', [[0, '#FFE27A'], [1, '#FF5A1F']], 0, 0, 1, 0)),
+  plasma: () => wrap(
+    `<g filter="url(#gl)"><circle cx="64" cy="64" r="26" fill="#C77DFF"/></g>` +
+    `<circle cx="64" cy="64" r="22" fill="url(#pl1)" stroke="#FFFFFF" stroke-width="2"/>` +
+    `<path d="M64 20 L58 44 L68 46 L60 64 M106 62 L84 58 L84 68 L68 62 M64 108 L70 86 L60 84 L66 68 M22 66 L44 70 L44 60 L60 66" stroke="#FFE27A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>` +
+    `<path d="${sparkle(64, 64, 12)}" fill="#FFFFFF"/>`,
+    '#6A2DB8', '#220A4A', rad('pl1', [[0, '#FFFFFF'], [0.5, '#E3B5FF'], [1, '#8A3FE0']])),
+  life: () => wrap(
+    `<path d="M64 102 C64 86 64 74 64 62" stroke="#2F8F3E" stroke-width="7" stroke-linecap="round"/>` +
+    `<path d="M64 70 C50 72 34 64 32 46 C50 44 62 54 64 70 Z" fill="url(#lf1)" stroke="#1E6B2C" stroke-width="2.5"/>` +
+    `<path d="M64 62 C76 62 94 52 96 32 C78 30 64 44 64 62 Z" fill="url(#lf1)" stroke="#1E6B2C" stroke-width="2.5"/>` +
+    `<path d="M40 50 C48 54 56 60 62 66 M90 38 C82 44 74 50 66 58" stroke="#D6FFD9" stroke-width="2.5" fill="none" opacity="0.8"/>` +
+    `<ellipse cx="64" cy="104" rx="22" ry="7" fill="#6B4A2B"/>` +
+    `<path d="${sparkle(92, 82, 7)}" fill="#FFFFFF"/><path d="${sparkle(36, 84, 5)}" fill="#E8FFD9"/>`,
+    '#7CD67A', '#1F5E2C', lin('lf1', [[0, '#B8FF9C'], [1, '#3BB34A']], 0, 0, 1, 1)),
+  ice: () => wrap(
+    `<g stroke="url(#ic1)" stroke-width="8" stroke-linecap="round" fill="none">` +
+    `<path d="M64 24 L64 104 M29 44 L99 84 M29 84 L99 44"/></g>` +
+    `<g stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none">` +
+    `<path d="M64 24 L64 104 M29 44 L99 84 M29 84 L99 44 M56 32 L64 40 L72 32 M56 96 L64 88 L72 96 M36 56 L44 52 L38 44 M92 72 L84 76 L90 84 M36 72 L44 76 L38 84 M92 56 L84 52 L90 44"/></g>` +
+    `<path d="${star(64, 64, 12, 6, 6)}" fill="#FFFFFF"/>`,
+    '#7FD3FF', '#1A5D9A', lin('ic1', [[0, '#DFF6FF'], [1, '#5FB8F0']])),
+  dust: () => wrap(
+    `<path d="M34 46 C54 36 84 38 94 48 C80 50 62 52 50 60 C66 58 84 62 88 70 C74 72 60 74 52 82 C62 82 74 86 74 92" stroke="url(#ds1)" stroke-width="9" stroke-linecap="round" fill="none"/>` +
+    `<path d="M34 46 C54 36 84 38 94 48 C80 50 62 52 50 60 C66 58 84 62 88 70 C74 72 60 74 52 82" stroke="#FFF4C9" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.8"/>` +
+    [[30, 64, 3], [40, 76, 2.5], [96, 60, 3], [100, 80, 2], [84, 98, 3], [44, 96, 2.5], [62, 30, 2.5], [78, 28, 2]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFE8A3"/>`).join(''),
+    '#C99A3E', '#5C3A10', lin('ds1', [[0, '#FFE8A3'], [1, '#D19A35']], 0, 0, 1, 0)),
+  storm: () => wrap(
+    `<path d="M34 60 C26 60 24 46 36 44 C36 32 52 28 58 36 C64 24 84 26 86 40 C98 38 104 54 94 60 Z" fill="#3E4C8C" stroke="#1E2754" stroke-width="2.5"/>` +
+    `<path d="M40 52 C46 46 56 46 60 50" stroke="#8A9BE8" stroke-width="3" fill="none" stroke-linecap="round"/>` +
+    `<g filter="url(#gl)"><path d="M66 58 L52 84 L64 84 L56 108 L80 76 L68 76 L76 58 Z" fill="#9FC3FF"/></g>` +
+    `<path d="M66 58 L52 84 L64 84 L56 108 L80 76 L68 76 L76 58 Z" fill="#FFE27A" stroke="#B5791A" stroke-width="2" stroke-linejoin="round"/>` +
+    `<path d="M40 70 L34 82 M94 68 L100 82" stroke="#9FC3FF" stroke-width="3" stroke-linecap="round"/>`,
+    '#4E66D9', '#141C4D'),
+  obsidian: () => wrap(
+    `<g filter="url(#gl)"><path d="M64 20 L92 50 L82 104 L46 104 L36 50 Z" fill="#9A4DFF" opacity="0.8"/></g>` +
+    `<path d="M64 22 L90 50 L80 102 L48 102 L38 50 Z" fill="url(#ob1)" stroke="#120818" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<path d="M64 22 L64 102 M38 50 L64 62 L90 50 M48 102 L64 62 L80 102" stroke="#B57BFF" stroke-width="1.8" fill="none" opacity="0.7"/>` +
+    `<path d="M64 22 L48 50 L56 60 Z" fill="#FFFFFF" opacity="0.35"/>` +
+    `<path d="${sparkle(84, 36, 7)}" fill="#E8D4FF"/>`,
+    '#5B2A8A', '#12071F', lin('ob1', [[0, '#4B2A6B'], [0.5, '#1E1230'], [1, '#0A0612']], 0, 0, 1, 1)),
+  forest: () => wrap(
+    `<ellipse cx="64" cy="100" rx="36" ry="8" fill="#3D6B2A"/>` +
+    `<path d="M44 98 L44 88 M64 100 L64 86 M84 98 L84 88" stroke="#6B4A2B" stroke-width="5"/>` +
+    `<path d="M44 34 L60 64 L52 64 L64 86 L24 86 L36 64 L28 64 Z" fill="url(#fo1)" stroke="#14532A" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<path d="M84 40 L100 66 L94 66 L104 88 L64 88 L74 66 L68 66 Z" fill="url(#fo1)" stroke="#14532A" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<path d="M64 22 L82 54 L74 54 L88 84 L40 84 L54 54 L46 54 Z" fill="url(#fo2)" stroke="#14532A" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<path d="${sparkle(64, 46, 6)}" fill="#FFFDE0"/><circle cx="50" cy="74" r="3" fill="#FFE27A"/><circle cx="80" cy="70" r="3" fill="#FF9AD5"/>`,
+    '#4FB86A', '#123F22', lin('fo1', [[0, '#7FE38A'], [1, '#2C8C43']]) + lin('fo2', [[0, '#A6F59A'], [1, '#34A050']])),
+  crystal: () => wrap(
+    `<g filter="url(#gl)"><path d="M64 18 L90 46 L64 110 L38 46 Z" fill="#FF9AD5" opacity="0.8"/></g>` +
+    `<path d="M64 18 L90 46 L64 110 L38 46 Z" fill="url(#cr1)" stroke="#8A2C6B" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<path d="M38 46 L90 46 M64 18 L54 46 L64 110 L74 46 Z" stroke="#FFFFFF" stroke-width="1.8" fill="none" opacity="0.8"/>` +
+    `<path d="M64 18 L54 46 L38 46 Z" fill="#FFFFFF" opacity="0.55"/>` +
+    `<path d="${sparkle(94, 30, 9)}" fill="#FFFFFF"/><path d="${sparkle(34, 80, 6)}" fill="#FFFFFF"/><path d="${sparkle(92, 86, 5)}" fill="#FFE6F6"/>`,
+    '#E05BB0', '#4A0E3A', lin('cr1', [[0, '#FFE6F6'], [0.4, '#FF9AD5'], [1, '#B23A8E']], 0, 0, 1, 1)),
+};
+
+export function compoundPiece(id) { return COMPOUNDS[id](); }
+
+export const BASE_IDS = Object.keys(BASE);
+export const COMPOUND_IDS = Object.keys(COMPOUNDS);
