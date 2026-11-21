@@ -105,7 +105,7 @@ function M.inject(board, finder, elements_list)
 		local function restore()
 			for i = #backup, 1, -1 do backup[i].p.id, backup[i].p.kind = backup[i].id, backup[i].kind end
 		end
-		local ok, move = true, nil
+		local ok, move
 		if finder.type == "fusion" then
 			local r = recipes.producing(finder.result)
 			local first_kind = elements.is_compound(r.a) and "compound" or "charged"

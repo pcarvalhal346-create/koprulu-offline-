@@ -1,0 +1,48 @@
+script: "/main/game.gui_script"
+fonts {
+  name: "title"
+  font: "/assets/fonts/title.font"
+}
+fonts {
+  name: "body"
+  font: "/assets/fonts/body.font"
+}
+textures {
+  name: "pieces"
+  texture: "/assets/atlases/pieces.atlas"
+}
+textures {
+  name: "board"
+  texture: "/assets/atlases/board.atlas"
+}
+textures {
+  name: "ui"
+  texture: "/assets/atlases/ui.atlas"
+}
+textures {
+  name: "fx"
+  texture: "/assets/atlases/fx.atlas"
+}
+textures {
+  name: "lumi"
+  texture: "/assets/atlases/lumi.atlas"
+}
+textures {
+  name: "bg"
+  texture: "/assets/atlases/bg.atlas"
+}
+layers {
+  name: "screen"
+}
+layers {
+  name: "popup"
+}
+layers {
+  name: "fx"
+}
+layers {
+  name: "top"
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
+max_nodes: 4096

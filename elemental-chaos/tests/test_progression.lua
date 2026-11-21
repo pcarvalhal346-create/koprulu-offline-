@@ -144,6 +144,7 @@ T.test("Localization has every key used by goals, elements and tutorials", funct
 	end
 	T.eq(L.get("goal.create", { n = 2, name = "Vapor" }), "Cria 2 Vapor")
 	T.eq(L.goal({ type = "clear", id = "frost", count = 3 }), "Remove 3 camadas de gelo")
+	T.eq(L.goal({ type = "clear", id = "rock", count = 6 }, 1), "Destrói 1 rocha")
 end)
 
 return T

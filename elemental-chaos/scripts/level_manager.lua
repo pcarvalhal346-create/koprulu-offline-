@@ -15,7 +15,6 @@ local presets = require "data.board_presets"
 
 local M = {}
 
-M.WORLD_FILES = { "levels.world_01", "levels.world_02", "levels.world_03" }
 M.WORLDS = {
 	{ id = 1, key = "world1", first = 1,  last = 20 },
 	{ id = 2, key = "world2", first = 21, last = 40 },
@@ -34,8 +33,9 @@ local cache
 local function load_all()
 	if cache then return cache end
 	cache = { list = {}, by_id = {} }
-	for _, file in ipairs(M.WORLD_FILES) do
-		local world = require(file)
+	-- literal requires so the Defold build includes every world file
+	local worlds = { require("levels.world_01"), require("levels.world_02"), require("levels.world_03") }
+	for _, world in ipairs(worlds) do
 		for _, def in ipairs(world) do
 			cache.list[#cache.list + 1] = def
 			cache.by_id[def.id] = def
@@ -152,7 +152,7 @@ function M.build_board(def, rng)
 	local preset = def.board_preset and presets[def.board_preset]
 	local min_moves = def.min_moves or 3
 	local best
-	for attempt = 1, 40 do
+	for _ = 1, 40 do
 		local board = M.build_shell(def)
 		local fixed = {}
 		if preset then

@@ -85,6 +85,11 @@ M.strings = {
 	["goal.clear.frost"] = "Remove {n} camadas de gelo",
 	["goal.clear.vine"] = "Remove {n} raízes",
 	["goal.clear.corruption"] = "Purifica {n} células corrompidas",
+	["goal.charge.one"] = "Cria 1 elemento carregado",
+	["goal.clear.rock.one"] = "Destrói 1 rocha",
+	["goal.clear.frost.one"] = "Remove 1 camada de gelo",
+	["goal.clear.vine.one"] = "Remove 1 raiz",
+	["goal.clear.corruption.one"] = "Purifica 1 célula corrompida",
 
 	-- -------------------------------------------------------------- elements
 	["el.fire"] = "Fogo", ["el.water"] = "Água", ["el.earth"] = "Terra", ["el.air"] = "Ar",
@@ -232,8 +237,10 @@ end
 --- Human readable objective, e.g. "Cria 2 Vapor"
 function M.goal(goal, count)
 	local n = count or goal.count
+	local base = goal.type == "clear" and ("goal.clear." .. goal.id) or ("goal." .. goal.type)
+	if n == 1 and M.strings[base .. ".one"] then return M.strings[base .. ".one"] end
 	if goal.type == "clear" then
-		return M.get("goal.clear." .. goal.id, { n = n })
+		return M.get(base, { n = n })
 	end
 	return M.get("goal." .. goal.type, { n = n, name = goal.id and M.element(goal.id) or "" })
 end
