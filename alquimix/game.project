@@ -96,3 +96,6 @@ bundle_name = Alquimix
 
 [engine]
 run_while_iconified = 0
+
+[shader]
+exclude_gles_sm100 = 0

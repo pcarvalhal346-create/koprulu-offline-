@@ -45,6 +45,21 @@ python3 -m http.server 8000 --directory dist/web/Alquimix
 O canvas ocupa a janela inteira (`html5.scale_mode = stretch`) e a interface adapta-se à proporção.
 O som só arranca depois do primeiro toque (regra dos navegadores).
 
+## Jogar no iPhone (GitHub Pages)
+
+A pasta `docs/alquimix/` na raiz do repositório contém a versão web pronta (gerada com
+`tools/build.sh pages`), com ecrã inteiro, ícone e manifesto para o ecrã principal.
+
+1. No GitHub, abre o repositório → **Settings → Pages**.
+2. Em *Build and deployment* escolhe **Deploy from a branch**, o branch com o Alquimix e a pasta **/docs**. Guarda.
+3. Espera 1–2 minutos e abre no Safari do iPhone `https://<utilizador>.github.io/<repositório>/`
+   (redireciona para `alquimix/`).
+4. **Partilhar → Adicionar ao ecrã principal**: o jogo abre em ecrã inteiro, com o ícone do Lumi.
+
+O progresso fica guardado no Safari desse iPhone. O som começa depois do primeiro toque.
+O projeto inclui shaders WebGL 1 (`[shader] exclude_gles_sm100 = 0`) porque algumas versões do
+Safari arrancam o motor em WebGL 1.
+
 ## Builds Android e iOS
 
 - **Android:** *Project → Bundle → Android Application* no editor, ou `BOB=... tools/build.sh android`
