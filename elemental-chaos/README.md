@@ -1,7 +1,7 @@
 # Elemental Chaos
 
 Jogo **Match-3 com alquimia** para Android, iOS e HTML5, feito em **Defold** e **Lua**.
-O jogador é um aprendiz da **Lumi, Rainha da Alquimia**, e restaura o equilíbrio do Reino de
+O jogador é um aprendiz do **Lumi, Rei da Alquimia**, e restaura o equilíbrio do Reino de
 Luméria ao longo de **60 níveis** em 3 mundos. Cada combinação feita pelo jogador cria um
 **elemento carregado**; elementos carregados fundem-se com elementos diferentes para criar
 **10 compostos** (Vapor, Lava, Plasma, Vida, Gelo, Poeira, Tempestade, Obsidiana, Floresta e
@@ -146,11 +146,11 @@ python3 tools/audio/generate_audio.py              # OGG (precisa de numpy e ffm
 ```
 
 Para usar arte feita à mão basta substituir o PNG com o mesmo nome em `assets/...` (o atlas usa o nome
-do ficheiro como id). A Lumi é montada a partir de partes (`assets/lumi/*.png`) e de
-`data/lumi_rig.lua` (posição de cada parte e articulações); ao trocar a arte da Lumi mantém as partes
+do ficheiro como id). O Lumi é montada a partir de partes (`assets/lumi/*.png`) e de
+`data/lumi_rig.lua` (posição de cada parte e articulações); ao trocar a arte do Lumi mantém as partes
 alinhadas na mesma tela de 400×520 ou atualiza o rig.
 
-## Alterar os diálogos da Lumi
+## Alterar os diálogos do Lumi
 
 Todos os textos estão em `scripts/localization.lua` (chaves `lumi.*`, `tut.*`, `tip.*`, `story.*`).
 A escolha de falas (com rotação para não repetir) está em `scripts/lumi.lua`; os passos dos tutoriais

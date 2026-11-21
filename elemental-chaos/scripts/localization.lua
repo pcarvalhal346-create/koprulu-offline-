@@ -122,13 +122,13 @@ M.strings = {
 	["story.campaign_end"] = "Campanha concluída! Podes repetir qualquer nível para conquistar mais estrelas.",
 
 	-- ------------------------------------------------------------------ Lumi
-	["lumi.intro.1"] = "Olá, aprendiz! Eu sou a Lumi, Rainha da Alquimia. O nosso reino precisa da tua ajuda!",
+	["lumi.intro.1"] = "Olá, aprendiz! Eu sou o Lumi, Rei da Alquimia. O nosso reino precisa da tua ajuda!",
 	["lumi.intro.2"] = "O Grande Caos espalhou cristais instáveis por Luméria. Só a alquimia pode devolver o equilíbrio aos quatro elementos.",
 	["lumi.intro.3"] = "Vamos começar pela floresta encantada. Eu estarei sempre por perto!",
 	["lumi.victory.1"] = "Alquimia brilhante! Mais um pedaço do reino está salvo!",
 	["lumi.victory.2"] = "Que talento! Os cristais já brilham com mais força.",
 	["lumi.victory.3"] = "Perfeito! Estás a tornar-te um verdadeiro alquimista.",
-	["lumi.victory.4"] = "Uau! Até as minhas asas estão a faiscar de alegria!",
+	["lumi.victory.4"] = "Uau! Até o meu círculo alquímico está a faiscar de alegria!",
 	["lumi.defeat.1"] = "Quase conseguimos! Experimenta outra estratégia, aprendiz.",
 	["lumi.defeat.2"] = "Não desistas! Às vezes uma fusão bem pensada muda tudo.",
 	["lumi.defeat.3"] = "O caos foi teimoso desta vez. Vamos tentar de novo?",
@@ -145,7 +145,7 @@ M.strings = {
 	["lumi.idle"] = "Precisas de uma ajudinha? Olha para o elemento que está a brilhar.",
 
 	-- -------------------------------------------------------------- tutorials
-	["tut.first_match.1"] = "Olá, aprendiz! Eu sou a Lumi, Rainha da Alquimia. O nosso reino precisa da tua ajuda!",
+	["tut.first_match.1"] = "Olá, aprendiz! Eu sou o Lumi, Rei da Alquimia. O nosso reino precisa da tua ajuda!",
 	["tut.first_match.2"] = "Junta três elementos iguais para concentrares a sua energia! Arrasta o Fogo para baixo.",
 	["tut.first_match.3"] = "Muito bem! Combina Fogos até recolheres 12. Repara: um dos Fogos ficou carregado de energia!",
 	["tut.charge.1"] = "Quando fazes uma combinação, um dos elementos guarda a energia dos outros.",

@@ -1,4 +1,4 @@
--- Lumi rendered from the generated rig (data/lumi_rig.lua): body parts are GUI
+-- Lumi (Rei da Alquimia) rendered from the generated rig (data/lumi_rig.lua): body parts are GUI
 -- nodes attached to joints, animated with gui.animate. Moods:
 -- idle, talk, point, happy, surprised, thinking, sad, victory.
 local rig = require "data.lumi_rig"
@@ -83,9 +83,10 @@ function M:set_face(face, variant)
 end
 
 function M:idle_loops()
-	local wl, wr = self.joints.wing_l, self.joints.wing_r
-	gui.animate(wl, "euler.z", -7, gui.EASING_INOUTSINE, 0.7, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
-	gui.animate(wr, "euler.z", 7, gui.EASING_INOUTSINE, 0.7, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+	-- the two halves of the transmutation circle turn together (same pivot)
+	for _, j in ipairs({ self.joints.wing_l, self.joints.wing_r }) do
+		gui.animate(j, "euler.z", 360, gui.EASING_LINEAR, 24, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
+	end
 	gui.animate(self.joints.body, "scale.y", 1.015, gui.EASING_INOUTSINE, 1.2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
 end
 
@@ -116,9 +117,9 @@ function M:set_mood(mood, talk_seconds)
 	if mood == "happy" or mood == "victory" then
 		gui.cancel_animations(self.root, "scale")
 		gui.animate(self.root, "scale", V3(sc * 1.06, sc * 1.06, 1), gui.EASING_OUTQUAD, 0.18, 0, nil, gui.PLAYBACK_ONCE_PINGPONG)
-		-- scepter star (canvas 310,254) in root coordinates; only valid for root-level Lumis
+		-- staff orb (canvas 310,244) in root coordinates; only valid for root-level Lumis
 		if self.world_x then
-			effects.burst(self.world_x + 110 * sc, self.world_y + 6 * sc, { count = mood == "victory" and 20 or 10, sprite = "fx_star", color = ui.hex("gold"), speed = 220, size = 26 })
+			effects.burst(self.world_x + 110 * sc, self.world_y + 16 * sc, { count = mood == "victory" and 20 or 10, sprite = "fx_star", color = ui.hex("gold"), speed = 220, size = 26 })
 		end
 	elseif mood == "surprised" then
 		gui.cancel_animations(self.root, "scale")

@@ -2,18 +2,18 @@
 -- Coordinates are in the 400x520 drawing canvas (y down); gui/lumi_view.lua converts them.
 return {
 	canvas = { w = 400, h = 520 },
-	joints = { wing_l = { x = 184, y = 306 }, wing_r = { x = 216, y = 306 }, head_back = { x = 200, y = 286 }, body = { x = 200, y = 400 }, arm_l = { x = 166, y = 304 }, head = { x = 200, y = 286 }, arm_r = { x = 234, y = 304 } },
+	joints = { wing_l = { x = 200, y = 292 }, wing_r = { x = 200, y = 292 }, head_back = { x = 200, y = 286 }, body = { x = 200, y = 400 }, arm_l = { x = 168, y = 304 }, head = { x = 200, y = 286 }, arm_r = { x = 232, y = 304 } },
 	parts = {
-		{ id = "lumi_wing_l", joint = "wing_l", cx = 112.5, cy = 293, w = 151, h = 146 },
-		{ id = "lumi_wing_r", joint = "wing_r", cx = 287.5, cy = 293, w = 151, h = 146 },
-		{ id = "lumi_hair_back", joint = "head_back", cx = 200, cy = 208.5, w = 210, h = 273 },
-		{ id = "lumi_body", joint = "body", cx = 200, cy = 379.5, w = 194, h = 227 },
-		{ id = "lumi_arm_l", joint = "arm_l", cx = 156, cy = 334.5, w = 64, h = 95 },
-		{ id = "lumi_head", joint = "head", cx = 200, cy = 200, w = 248, h = 170 },
-		{ id = "lumi_eyes", joint = "head", face = "eyes", variants = { eyes_open = { cx = 200, cy = 197.5, w = 130, h = 83 }, eyes_closed = { cx = 200, cy = 216, w = 130, h = 18 }, eyes_happy = { cx = 200, cy = 208, w = 132, h = 28 }, eyes_wide = { cx = 200, cy = 195.5, w = 136, h = 91 }, eyes_sad = { cx = 200, cy = 203, w = 130, h = 70 }, eyes_think = { cx = 200, cy = 197.5, w = 130, h = 83 } } },
-		{ id = "lumi_mouth", joint = "head", face = "mouth", variants = { mouth_smile = { cx = 200, cy = 262.5, w = 42, h = 19 }, mouth_open = { cx = 200, cy = 265, w = 44, h = 26 }, mouth_o = { cx = 200, cy = 264, w = 28, h = 32 }, mouth_sad = { cx = 200, cy = 264.5, w = 38, h = 17 }, mouth_grin = { cx = 200, cy = 265.5, w = 56, h = 31 }, mouth_small = { cx = 201, cy = 262.5, w = 28, h = 13 } } },
-		{ id = "lumi_hair_front", joint = "head", cx = 200, cy = 170, w = 190, h = 172 },
-		{ id = "lumi_crown", joint = "head", cx = 200, cy = 83, w = 92, h = 62 },
-		{ id = "lumi_arm_r", joint = "arm_r", cx = 280.5, cy = 346, w = 137, h = 264 }
+		{ id = "lumi_wing_l", joint = "wing_l", cx = 115.5, cy = 292, w = 173, h = 342 },
+		{ id = "lumi_wing_r", joint = "wing_r", cx = 284.5, cy = 292, w = 173, h = 342 },
+		{ id = "lumi_hair_back", joint = "head_back", cx = 201, cy = 161, w = 226, h = 210 },
+		{ id = "lumi_body", joint = "body", cx = 200, cy = 378, w = 182, h = 228 },
+		{ id = "lumi_arm_l", joint = "arm_l", cx = 153, cy = 339, w = 58, h = 102 },
+		{ id = "lumi_head", joint = "head", cx = 200, cy = 200, w = 220, h = 166 },
+		{ id = "lumi_eyes", joint = "head", face = "eyes", variants = { eyes_open = { cx = 200, cy = 198.5, w = 124, h = 75 }, eyes_closed = { cx = 200, cy = 215.5, w = 122, h = 17 }, eyes_happy = { cx = 200, cy = 208.5, w = 124, h = 27 }, eyes_wide = { cx = 200, cy = 196.5, w = 130, h = 83 }, eyes_sad = { cx = 200, cy = 202.5, w = 124, h = 67 }, eyes_think = { cx = 200, cy = 198.5, w = 124, h = 75 } } },
+		{ id = "lumi_mouth", joint = "head", face = "mouth", variants = { mouth_smile = { cx = 201, cy = 255.5, w = 48, h = 21 }, mouth_open = { cx = 200, cy = 260.5, w = 40, h = 25 }, mouth_o = { cx = 200, cy = 260, w = 26, h = 30 }, mouth_sad = { cx = 200, cy = 259.5, w = 38, h = 17 }, mouth_grin = { cx = 201, cy = 257.5, w = 58, h = 31 }, mouth_small = { cx = 201, cy = 257, w = 32, h = 14 } } },
+		{ id = "lumi_hair_front", joint = "head", cx = 200, cy = 159, w = 200, h = 178 },
+		{ id = "lumi_crown", joint = "head", cx = 211, cy = 88, w = 78, h = 60 },
+		{ id = "lumi_arm_r", joint = "arm_r", cx = 284.5, cy = 340.5, w = 133, h = 275 }
 	},
 }

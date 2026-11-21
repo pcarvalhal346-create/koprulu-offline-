@@ -18,7 +18,7 @@ runtime Defold 1.14.1 (build HTML5/wasm com `bob.jar`) num Chromium sem ecrã (r
 | Simulador/bot de partidas | Feito | `tests/simulate.lua`; também joga dentro do motor (`autoplay = 1`) |
 | Gravação (sys.save/sys.load), valores por omissão, migração v0→v1→v2 | Feito | Teste 24 (backend em memória). No motor só foi exercitado o caminho de escrita em HTML5 |
 | Tutoriais guiados (16 tutoriais), veu com abertura, mão animada, bloqueio de ações, saltar, persistência, repetir | Feito | Teste que executa todos os passos guiados; motor (níveis 1, 3, 31, 41, 51) |
-| Dicas: realce após 7 s parado; dica da Lumi após 4 jogadas sem progresso | Feito | Motor (dica de rochas no nível 20) |
+| Dicas: realce após 7 s parado; dica do Lumi após 4 jogadas sem progresso | Feito | Motor (dica de rochas no nível 20) |
 | Lumi: rig por partes, 6 olhos, 6 bocas, 8 estados, piscar, falar | Feito | Motor (menu, diálogos, vitória, derrota, descoberta) |
 | Menu principal, introdução (saltável), mapa com 60 níveis (nós reutilizados), popup de nível | Feito | Motor |
 | Livro de Alquimia (silhuetas, contador, "Novo!", detalhe), descoberta com carta | Feito | Motor |
