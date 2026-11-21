@@ -22,7 +22,7 @@ local function record(paths, order, p, x, y, how)
 end
 
 --- @param board Board
---- @param spawn_fn function(x) -> element id for a new base piece
+--- @param spawn_fn function(x, landing_y, board) -> element id for a new base piece
 --- @param teleported table set uid->true shared by one whole resolution
 --- @return result { paths = {uid -> points}, order = {uid...}, spawns = {...}, moved = bool }
 function M.apply(board, spawn_fn, teleported)
@@ -56,7 +56,10 @@ function M.apply(board, spawn_fn, teleported)
 		for x = 1, board.w do
 			local sy = board:spawn_row(x)
 			if sy and board:empty(x, sy) then
-				local id = spawn_fn(x)
+				-- the new piece will fall to the lowest empty cell straight below
+				local land = sy
+				while board:empty(x, land + 1) do land = land + 1 end
+				local id = spawn_fn(x, land, board)
 				local p = board:spawn(x, sy, id, "base")
 				spawn_count[x] = (spawn_count[x] or 0) + 1
 				spawns[#spawns + 1] = { uid = p.uid, id = id, x = x, y = sy, stack = spawn_count[x] }

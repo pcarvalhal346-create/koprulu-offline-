@@ -22,6 +22,7 @@ local Game = {}
 Game.__index = Game
 
 Game.MAX_CASCADES = 50
+Game.CASCADE_DAMPING = 0.92
 Game.SCORE = {
 	piece = 10, line4 = 60, line5 = 150, cross = 80,
 	fusion = { 100, 250 }, activate = 150, objective = 300, move_left = 120,
@@ -51,6 +52,7 @@ function Game.new(def, opts)
 	self.discovered = copy(opts.discovered or {})
 	self.new_discoveries = {}
 	self.weights = level_manager.weights(def)
+	self.damping = def.cascade_damping or Game.CASCADE_DAMPING
 	self.conveyor_period = (def.terrain and def.terrain.conveyor_period) or 3
 	local cor = def.terrain and def.terrain.corruption
 	if cor then
@@ -95,8 +97,17 @@ function Game:count_obstacle(kind, amount)
 	self:progress("clear", kind, amount)
 end
 
-function Game:spawn_id()
-	return self.rng:weighted(self.level.elements, self.weights)
+--- New piece for the refill. With probability `damping` the generator avoids
+--- completing a run at the landing cell, keeping chain reactions exciting but rare.
+function Game:spawn_id(x, y, board)
+	local id = self.rng:weighted(self.level.elements, self.weights)
+	if board and self.rng:random() < self.damping then
+		for _ = 1, 4 do
+			if not match.would_complete_run(board, x, y, id) then break end
+			id = self.rng:weighted(self.level.elements, self.weights)
+		end
+	end
+	return id
 end
 
 --- Remove a piece because of a match or a power (counts for "collect").
@@ -118,6 +129,26 @@ function Game:use_move()
 end
 
 -- ------------------------------------------------------------- resolution --
+
+--- Refill tuning: a freshly spawned piece that completes a run is re-rolled
+--- with probability `damping` (only new pieces, never pieces already visible).
+--- With 3 elements on an 8x8 board unrestricted refills chain almost forever.
+function Game:damp_spawns(g)
+	local list = self.level.elements
+	for _, s in ipairs(g.spawns) do
+		local path = g.paths[s.uid]
+		local last = path[#path]
+		local p = self.board:piece(last.x, last.y)
+		if p and p.uid == s.uid and match.matches_at(self.board, last.x, last.y) and self.rng:random() < self.damping then
+			local start = self.rng:random(#list)
+			for i = 0, #list - 1 do
+				p.id = list[(start + i - 1) % #list + 1]
+				if not match.matches_at(self.board, last.x, last.y) then break end
+			end
+			s.id = p.id
+		end
+	end
+end
 
 function Game:process_groups(groups, manual)
 	self.stats.matches = self.stats.matches + #groups
@@ -180,8 +211,9 @@ function Game:resolve(manual)
 	local teleported = {}
 	self.cascade = 0
 	for _ = 1, Game.MAX_CASCADES do
-		local g = gravity.apply(self.board, function() return self:spawn_id() end, teleported)
+		local g = gravity.apply(self.board, function(x, y, b) return self:spawn_id(x, y, b) end, teleported)
 		if g.moved then
+			self:damp_spawns(g)
 			self:emit({ type = "gravity", paths = g.paths, order = g.order, spawns = g.spawns })
 		end
 		local groups = match.find_groups(self.board)
